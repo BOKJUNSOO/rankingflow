@@ -7,6 +7,7 @@ import pendulum
 import time
 import requests
 import json
+from pprint import pprint
 
 # params
 # api key
@@ -24,7 +25,7 @@ with DAG(
 ) as dag :
     # GET DATA FUCTION
     def get_data():
-        print(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+        pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
         headers = {
         "x-nxopen-api-key" : f"{api_key}",
         "User-agent" : "Mozilla/5.0"
@@ -45,7 +46,7 @@ with DAG(
                 req = requests.get(url = url, headers = headers)
                 data = req.json()
                 mydata.append(data)
-        print(mydata)
+        pprint(mydata)
 
     get_data_ = PythonOperator(
         task_id = "get_data",
