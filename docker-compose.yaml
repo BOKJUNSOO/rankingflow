@@ -75,7 +75,7 @@ x-airflow-common:
   volumes:
     - ./dags:/opt/airflow/dags
     - ./plugins:/opt/airflow/plugins
-    - ./config/airflow.cfg:/opt/airflow/config/airflow.cfg
+    - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
 
   user: "${AIRFLOW_UID:-50000}:0"
