@@ -14,10 +14,6 @@ api_key = Variable.get("apikey_openapi_nexon")
 # 날짜 파싱
 target_date = datetime.now().strftime("%Y-%m-%d")
 # 호출 헤더
-headers = {
-        "x-nxopen-api-key" : f"{api_key}",
-        "User-agent" : "Mozilla/5.0"
-        }
 
 # DAG
 with DAG(
@@ -29,6 +25,10 @@ with DAG(
     # GET DATA FUCTION
     def get_data():
         print(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+        headers = {
+        "x-nxopen-api-key" : f"{api_key}",
+        "User-agent" : "Mozilla/5.0"
+        }
         # json 파일을 담을 객체
         mydata = []
         # 1페이지당 200명의 랭킹정보
