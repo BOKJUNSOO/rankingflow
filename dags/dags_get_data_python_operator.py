@@ -47,7 +47,17 @@ with DAG(
                 data = req.json()
                 mydata.append(data)
         pprint(mydata)
+        # 호출된 데이터 객체를 data 디렉토리에 저장
+        file_path = f"/opt/airflow/data/ranking_{target_date}.json"
+        with open (file_path, "w", encoding = "UTF-8-SIG") as f:
+            json.dump(mydata
+                      ,f
+                      ,ensure_ascii=False
+                      ,indent='\t'
+                        )
+        print("done")
 
+    # task
     get_data_ = PythonOperator(
         task_id = "get_data",
         python_callable=get_data
