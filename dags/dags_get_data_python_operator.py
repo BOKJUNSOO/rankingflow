@@ -14,7 +14,6 @@ from pprint import pprint
 api_key = Variable.get("apikey_openapi_nexon")
 # 날짜 파싱
 target_date = datetime.now().strftime("%Y-%m-%d")
-# 호출 헤더
 
 # DAG
 with DAG(
