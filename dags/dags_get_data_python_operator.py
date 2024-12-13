@@ -18,7 +18,7 @@ target_date = datetime.now().strftime("%Y-%m-%d")
 # DAG
 with DAG(
     dag_id = "dags_get_data_python_operator",
-    schedule= "0 0 * * *",
+    schedule= "0 10 * * *",
     start_date= pendulum.datetime(2024,12,11, tz = "Asia/Seoul"),
     catchup=False
 ) as dag :
