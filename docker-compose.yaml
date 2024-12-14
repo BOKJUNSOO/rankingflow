@@ -95,8 +95,6 @@ x-spark-common:
   volumes:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
-  networks:
-    - Default-net
 
 services:
   spark-master:
