@@ -44,6 +44,8 @@
 #
 # Feel free to modify this file to suit your needs.
 ---
+version: "3"
+
 x-airflow-common:
   &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
@@ -87,7 +89,57 @@ x-airflow-common:
     postgres:
       condition: service_healthy
 
+x-spark-common:
+  &spark-common
+  image: bitnami/spark:latest
+  environment:
+    TZ: "Asia/Seoul"
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+    - ./data:/opt/bitnami/spark/data
+  networks:
+    - default-network
+
 services:
+  spark-master:
+    <<: *spark-common
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_PORT=7070
+      - SPARK_MASTER_WEBUI_PORT=8080
+    command: bin/spark-class org.apache.spark.deploy.master.master
+    ports:
+      - "7077:7077"
+      - "9080:8080"
+    #  - "6066:6066"
+    networks:
+      - default-network
+  
+  spark-worker:
+    <<: *spark-common
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=8081
+    ports:
+      - "9081:8081"
+    depends_on:
+      - spark-master
+    networks:
+      - default-network
+  
+  jupyterlab:
+    image: jupyter/pyspark-notebook:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+    depends_on:
+      - spark-master
+
   postgres:
     image: postgres:13
     environment:
