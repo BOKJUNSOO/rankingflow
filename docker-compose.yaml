@@ -78,6 +78,7 @@ x-airflow-common:
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ./data:/opt/airflow/data
+    - ./jobs:/opt/airflow/jobs
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
