@@ -86,6 +86,8 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+    networks:
+    - default-network
 
 x-spark-common:
   &spark-common
