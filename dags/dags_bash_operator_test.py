@@ -12,7 +12,7 @@ with DAG(
 
     task1 = BashOperator(
         task_id = "task1",
-        bash_command="/opt/airflow/plugins sparktest.sh"
+        bash_command="/opt/airflow/plugins/sparktest.sh sparktest.py"
     )
 
     task1
