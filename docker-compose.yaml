@@ -78,8 +78,6 @@ x-airflow-common:
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ./data:/opt/airflow/data
-  networks:
-    - default-network
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -87,6 +85,8 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+    networks:
+    - default-network
 
 x-spark-common:
   &spark-common
