@@ -135,7 +135,7 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - GRANT_SUDO=yes
-      - JUPYTER-TOKEN=password
+      - JUPYTER_TOKEN=password
     depends_on:
       - spark-master
 
