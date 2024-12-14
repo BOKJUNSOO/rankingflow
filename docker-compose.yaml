@@ -80,7 +80,7 @@ x-airflow-common:
     - ./data:/opt/airflow/data
   user: "${AIRFLOW_UID:-50000}:0"
   network:
-    - airflow-net
+    - Default-net
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -98,7 +98,7 @@ x-spark-common:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
   networks:
-    - airflow-net
+    - Default-net
 
 services:
   spark-master:
@@ -337,7 +337,7 @@ services:
         condition: service_completed_successfully
 
 networks:
-  airflow-net:
+  Default-net:
     driver: bridge
 
 volumes:
