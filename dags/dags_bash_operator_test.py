@@ -14,3 +14,5 @@ with DAG(
         task_id = "task1",
         bash_command="/opt/airflow/plugins sparktest.sh"
     )
+
+    task1

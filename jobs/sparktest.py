@@ -1,12 +1,15 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
+from datetime import datetime 
 spark = (
     SparkSession.builder \
                 .master("local")
                 .appName("submit_test")
                 .getOrCreate()
 )
-file_path = "/opt/bitnami/spark/data/ranking_2024-12-14.json"
+target_date = datetime.now().strftime("%Y-%m-%d")
+
+file_path = f"/opt/bitnami/spark/data/ranking_{target_date}.json"
 df = spark.read \
           .format("json") \
           .option("multiLine", True) \
