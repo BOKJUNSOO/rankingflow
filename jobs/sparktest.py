@@ -5,5 +5,6 @@ spark = (
                 .appName("World Count")
                 .getOrCreate()
 )
-
-#file_path = "/opt/spark/data"
+file_path = "/opt/bitnami/spark/data/ranking_2024-12-14.json"
+df = spark.read.format('json')
+df.printSchema()
