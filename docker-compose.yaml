@@ -150,9 +150,7 @@ services:
       retries: 5
       start_period: 5s
     restart: always
-    networks:
-      - Default-net
-
+  
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
@@ -183,8 +181,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - Default-net
 
   airflow-scheduler:
     <<: *airflow-common
@@ -200,8 +196,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - Default-net
+
 
   airflow-worker:
     <<: *airflow-common
@@ -225,8 +220,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - Default-net
+
 
   airflow-triggerer:
     <<: *airflow-common
