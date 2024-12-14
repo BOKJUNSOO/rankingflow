@@ -110,9 +110,7 @@ services:
       - "7077:7077"
       - "9080:8080"
     #  - "6066:6066"
-    networks:
-      - default-network
-  
+
   spark-worker:
     <<: *spark-common
     environment:
@@ -123,9 +121,7 @@ services:
       - "9081:8081"
     depends_on:
       - spark-master
-    networks:
-      - default-network
-  
+
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
     ports:
@@ -139,6 +135,8 @@ services:
       - JUPYTER_TOKEN=password
     depends_on:
       - spark-master
+    networks:
+      - default-network
 
   postgres:
     image: postgres:13
