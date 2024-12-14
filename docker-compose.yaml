@@ -79,6 +79,8 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ./data:/opt/airflow/data
   user: "${AIRFLOW_UID:-50000}:0"
+  network:
+    - airflow-net
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -96,7 +98,7 @@ x-spark-common:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
   networks:
-    - default-network
+    - airflow-net
 
 services:
   spark-master:
@@ -335,7 +337,8 @@ services:
         condition: service_completed_successfully
 
 networks:
-  default-network:
+  airflow-net:
+    driver: bridge
 
 volumes:
   postgres-db-volume:
