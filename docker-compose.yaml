@@ -131,9 +131,11 @@ services:
       - "8888:8888"
     volumes:
       - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/data
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - GRANT_SUDO=yes
+      - JUPYTER-TOKEN=password
     depends_on:
       - spark-master
 
