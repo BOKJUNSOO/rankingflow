@@ -93,8 +93,6 @@ x-airflow-common:
 x-spark-common:
   &spark-common
   image: bitnami/spark:latest
-  environment:
-    TZ: "Asia/Seoul"
   volumes:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
@@ -106,7 +104,7 @@ services:
     <<: *spark-common
     environment:
       - SPARK_MODE=master
-      - SPARK_MASTER_PORT=7070
+      - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
     ports:
       - "7077:7077"
