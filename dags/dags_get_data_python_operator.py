@@ -13,7 +13,7 @@ from pprint import pprint
 # api key
 api_key = Variable.get("apikey_openapi_nexon")
 # 날짜 파싱
-target_date = datetime.now().strftime("%Y-%m-%d")
+# target_date = datetime.now().strftime("%Y-%m-%d")
 
 # DAG
 with DAG(
@@ -23,7 +23,8 @@ with DAG(
     catchup=False
 ) as dag :
     # GET DATA FUCTION
-    def get_data():
+    def get_data(**kwargs):
+        target_date = kwargs["data_interval_end"].strftime("%Y-%m-%d")
         pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
         headers = {
         "x-nxopen-api-key" : f"{api_key}",
