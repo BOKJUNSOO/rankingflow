@@ -1,15 +1,16 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from datetime import datetime 
+from dateutil import relativedelta
 spark = (
     SparkSession.builder \
                 .master("local")
                 .appName("submit_test")
                 .getOrCreate()
 )
-test_date = datetime.now()
-print("스크립트의 인식 날짜:",f"{test_date}")
-target_date = datetime.now().strftime("%Y-%m-%d")
+
+now = datetime.now().strftime("%Y-%m-%d") # UTF 시간
+target_date = now + relativedelta.relativedelta(days=+1)
 print(f"{target_date}일자의 data를 정제합니다.")
 file_path = f"/opt/airflow/data/ranking_{target_date}.json"
 print(f"{file_path}")

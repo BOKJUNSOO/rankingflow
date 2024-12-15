@@ -18,7 +18,7 @@ api_key = Variable.get("apikey_openapi_nexon")
 # DAG
 with DAG(
     dag_id = "dags_get_data_python_operator",
-    schedule= "0 10 * * *",
+    schedule= "0 0 * * *",
     start_date= pendulum.datetime(2024,12,11, tz = "Asia/Seoul"),
     catchup=False
 ) as dag :
