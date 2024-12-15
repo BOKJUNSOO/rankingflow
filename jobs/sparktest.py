@@ -8,7 +8,7 @@ spark = (
                 .getOrCreate()
 )
 target_date = datetime.now().strftime("%Y-%m-%d")
-
+print(f"{target_date}일자의 data를 정제합니다.")
 file_path = f"/opt/airflow/data/ranking_{target_date}.json"
 print(f"{file_path}")
 df = spark.read \
