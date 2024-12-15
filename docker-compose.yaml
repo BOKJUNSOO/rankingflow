@@ -102,6 +102,7 @@ x-spark-common:
 services:
   spark-master:
     <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.master.Master
     environment:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
@@ -113,12 +114,11 @@ services:
 
   spark-worker:
     <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_WEBUI_PORT=8081
-    ports:
-      - "9081:8081"
     depends_on:
       - spark-master
 
