@@ -1,14 +1,11 @@
+#docker compose 
 ---
 x-spark-common: &spark-common
   image: bitnami/spark:latest
   volumes:
     - ./jobs:/opt/bitnami/spark/jobs
-    - ./data:/opt/bitnami/spark/data
-    - ./resources:/opt/bitnami/spark/resources
-  environment:
-      TZ: "Asia/Seoul"
   networks:
-    - default-network
+    - default-net
 
 x-airflow-common: &airflow-common
   build:
@@ -20,29 +17,23 @@ x-airflow-common: &airflow-common
     - ./dags:/opt/airflow/dags
     - ./plugins:/opt/airflow/plugins
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
-    - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+    - ./logs:/opt/airflow/logs
     - ./data:/opt/airflow/data
     - ./jobs:/opt/airflow/jobs
   depends_on:
     - postgres
-  environment:
-      TZ: "Asia/Seoul"
   networks:
-    - default-network
+    - default-net
 
 services:
   spark-master:
     <<: *spark-common
-    hostname: spark-master
     command: bin/spark-class org.apache.spark.deploy.master.Master
-    expose:
-      - "7077"
     ports:
       - "9090:8080"
       - "7077:7077"
-      - "4444:4040"
 
-  spark-worker-1:
+  spark-worker:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
@@ -53,6 +44,27 @@ services:
       SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
 
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    networks:
+      - default-net
+
+  webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8081:8081"
+    depends_on:
+      - scheduler
+
+  scheduler:
+    <<: *airflow-common
+    command: bash -c "airflow db init && airflow db migrate && airflow users create --username admin --firstname Yusuf --lastname Ganiyu --role Admin --email airscholar@gmail.com --password admin && airflow scheduler"
+  
   #Jupyter notebook
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
@@ -67,27 +79,6 @@ services:
       - JUPYTER_TOKEN=password
     depends_on:
       - spark-master
-
-  postgres:
-    image: postgres:14.0
-    environment:
-      - POSTGRES_USER=airflow
-      - POSTGRES_PASSWORD=airflow
-      - POSTGRES_DB=airflow
-    networks:
-      - default-network
-
-  webserver:
-    <<: *airflow-common
-    command: webserver
-    ports:
-      - "8081:8081"
-    depends_on:
-      - scheduler
-
-  scheduler:
-    <<: *airflow-common
-    command: bash -c "airflow db init && airflow db migrate && airflow users create --username airflow --firstname airflow --lastname airflow --role Admin --email airflow@gmail.com --password airflow && airflow scheduler"
 
 networks:
   default-network:
