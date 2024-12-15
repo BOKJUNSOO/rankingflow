@@ -1,5 +1,4 @@
-version: '3'
-
+---
 x-spark-common: &spark-common
   image: bitnami/spark:latest
   volumes:
