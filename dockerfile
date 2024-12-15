@@ -7,6 +7,6 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 USER airflow
-RUN pip install --upgrade apache-airflow-providers-openlineage>=1.8.0 apache-airflow-providers-apache-spark pyspark
-
+RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" apache-airflow-providers-apache-spark==2.1.3 pyspark
