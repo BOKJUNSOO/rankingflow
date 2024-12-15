@@ -24,7 +24,9 @@ with DAG(
 ) as dag :
     # GET DATA FUCTION
     def get_data(**kwargs):
-        target_date = kwargs["data_interval_end"].strftime("%Y-%m-%d")
+        korea_time = kwargs["data_interval_end"].in_timezone("Asia/Seoul")
+        pprint(f"{korea_time}")
+        target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
         headers = {
         "x-nxopen-api-key" : f"{api_key}",

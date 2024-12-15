@@ -7,6 +7,8 @@ spark = (
                 .appName("submit_test")
                 .getOrCreate()
 )
+test_date = datetime.now()
+print("스크립트의 인식 날짜:",f"{test_date}")
 target_date = datetime.now().strftime("%Y-%m-%d")
 print(f"{target_date}일자의 data를 정제합니다.")
 file_path = f"/opt/airflow/data/ranking_{target_date}.json"
