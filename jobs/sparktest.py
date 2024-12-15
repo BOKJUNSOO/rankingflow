@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
-from datetime import datetime 
-from dateutil import relativedelta
+import datetime
+
 spark = (
     SparkSession.builder \
                 .master("local")
@@ -9,10 +9,12 @@ spark = (
                 .getOrCreate()
 )
 
-now = datetime.now().strftime("%Y-%m-%d") # UTF 시간
-target_date = now + relativedelta.relativedelta(days=+1)
+now = datetime.datetime.now()# airflow UTC 로 인식(9시간이 느리다)
+#target_date = now + datetime.timedelta(days=1) # 스케줄은 한국시간 01:00에 시작
+target_date = now.strftime("%Y-%m-%d")
 print(f"{target_date}일자의 data를 정제합니다.")
 file_path = f"/opt/airflow/data/ranking_{target_date}.json"
+
 print(f"{file_path}")
 df = spark.read \
           .format("json") \

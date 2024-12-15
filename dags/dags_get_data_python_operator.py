@@ -18,15 +18,15 @@ api_key = Variable.get("apikey_openapi_nexon")
 # DAG
 with DAG(
     dag_id = "dags_get_data_python_operator",
-    schedule= "0 0 * * *",
+    schedule= "0 6 * * *",
     start_date= pendulum.datetime(2024,12,11, tz = "Asia/Seoul"),
     catchup=False
 ) as dag :
     # GET DATA FUCTION
     def get_data(**kwargs):
-        korea_time = kwargs["data_interval_end"].in_timezone("Asia/Seoul")
-        pprint(f"{korea_time}")
+        # airflow에서 dag이 도는 시점에에 인식하는 시간설정 (UTC -> Asia/Seoul time zone)
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
+        # 배치일 6시
         pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
         headers = {
         "x-nxopen-api-key" : f"{api_key}",

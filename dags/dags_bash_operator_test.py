@@ -8,7 +8,8 @@ file_name = "/opt/airflow/jobs/sparktest.py"
 with DAG(
     dag_id = "dags_bash_operator_test",
     start_date=pendulum.datetime(2024, 12, 12, tz = "Asia/Seoul"),
-    schedule="10 0 * * *",
+    # 배치일 오전 9시 10분
+    schedule="10 9 * * *",
     catchup=False
 ) as dag:
 
