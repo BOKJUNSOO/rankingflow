@@ -1,4 +1,3 @@
-#Dockerfile
 FROM apache/airflow:2.7.1-python3.11
 
 USER root
@@ -11,5 +10,4 @@ ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-arm64
 RUN export JAVA_HOME
 
 USER airflow
-
-RUN pip install apache-airflow apache-airflow-providers-apache-spark pyspark
+RUN pip install apache-airflow apache-airflow-providers-apache-spark pyspark apache-airflow-providers-openlineage>=1.8.0
