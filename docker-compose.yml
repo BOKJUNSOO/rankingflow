@@ -81,4 +81,4 @@ services:
       - spark-master
 
 networks:
-  default-network:
+  default-net:
