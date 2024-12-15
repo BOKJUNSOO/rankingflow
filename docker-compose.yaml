@@ -340,7 +340,7 @@ services:
         condition: service_completed_successfully
 
 networks:
-    - default-net
+  default-net:
 
 volumes:
   postgres-db-volume:
