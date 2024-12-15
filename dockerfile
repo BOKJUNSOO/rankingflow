@@ -1,12 +1,8 @@
-FROM apache/airflow:2.10.3-python3.12
+FROM apache/airflow:2.7.1-python3.11
 
 USER root
 RUN apt-get update
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    python3-dev \
-    openjdk-11-jdk \
-    wget
+RUN apt-get install -y gcc python3-dev openjdk-11-jdk wget
 RUN apt-get clean
 
 # Set JAVA_HOME environment variable
