@@ -54,19 +54,19 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
 
   #Jupyter notebook
-  jupyter-spark:
-    # image: minz95/de2024:jupyter
-    build:
-     dockerfile: jupyter/Dockerfile
-    networks:
-      - default-network
+  jupyterlab:
+    image: jupyter/pyspark-notebook:latest
     ports:
       - "8888:8888"
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data
     environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
       - JUPYTER_TOKEN=password
+    depends_on:
+      - spark-master
 
   postgres:
     image: postgres:14.0
