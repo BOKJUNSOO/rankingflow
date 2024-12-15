@@ -9,7 +9,7 @@ spark = (
 )
 target_date = datetime.now().strftime("%Y-%m-%d")
 
-file_path = f"./data/ranking_{target_date}.json"
+file_path = f"/opt/airflow/data/ranking_{target_date}.json"
 print(f"{file_path}")
 df = spark.read \
           .format("json") \
