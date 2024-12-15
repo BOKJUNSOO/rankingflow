@@ -8,4 +8,4 @@ echo "start spark submit with bash operator"
 spark-submit \
     --name ${JOBNAME} \
     --master spark://spark-master:7077 \
-    ${script}
+    ${script}   # /opt/airflow/jobs/pyfile
