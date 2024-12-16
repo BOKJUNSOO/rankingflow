@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from airflow.models import Variable
 
 from datetime import datetime
@@ -20,7 +21,7 @@ with DAG(
     start_date= pendulum.datetime(2024,12,11, tz = "Asia/Seoul"),
     catchup=False
 ) as dag :
-    # GET DATA FUCTION
+    #[ GET DATA FUCTION ]
     def get_data(**kwargs):
         # airflow에서 Batch 시점(data_interval_end)에 한국시간
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
@@ -58,10 +59,18 @@ with DAG(
                         )
         print("done")
 
-    # task
+    #[ get_data_task ]
     get_data_ = PythonOperator(
-        task_id = "get_data",
+        task_id = "get_data_",
         python_callable=get_data
     )
 
-    get_data_
+    #[ data_Refine_task ]
+    # sparkjob script
+    file_name = "/opt/airflow/jobs/sparktest.py"
+    refine_data_ = BashOperator(
+        task_id = "refine_data_",
+        bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}'
+    )
+
+    get_data_ >> refine_data_
