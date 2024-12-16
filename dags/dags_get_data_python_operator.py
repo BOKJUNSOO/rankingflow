@@ -12,8 +12,6 @@ from pprint import pprint
 # params
 # api key
 api_key = Variable.get("apikey_openapi_nexon")
-# 날짜 파싱
-# target_date = datetime.now().strftime("%Y-%m-%d")
 
 # DAG
 with DAG(
@@ -24,10 +22,11 @@ with DAG(
 ) as dag :
     # GET DATA FUCTION
     def get_data(**kwargs):
-        # airflow에서 dag이 도는 시점에에 인식하는 시간설정 (UTC -> Asia/Seoul time zone)
+        # airflow에서 Batch 시점(data_interval_end)에 한국시간
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         # 배치일 6시
         pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+        # 호출 헤더
         headers = {
         "x-nxopen-api-key" : f"{api_key}",
         "User-agent" : "Mozilla/5.0"
