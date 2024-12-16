@@ -23,6 +23,13 @@ with DAG(
 ) as dag :
     #[ GET DATA FUCTION ]
     def get_data(**kwargs):
+        # schedule 부하 줄이기
+        from datetime import datetime
+        import pendulum
+        import time
+        import requests
+        import json
+        from pprint import pprint
         # airflow에서 Batch 시점(data_interval_end)에 한국시간
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         # 배치일 6시
@@ -73,4 +80,5 @@ with DAG(
         bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}'
     )
 
+    # task flow
     get_data_ >> refine_data_
