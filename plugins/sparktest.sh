@@ -1,6 +1,6 @@
 #!/bin/bash
 
-script=$1
+script=$@
 JOBNAME="RefineData"
 echo "Job name is $JOBNAME"
 echo "submit this job >> ${script}"
