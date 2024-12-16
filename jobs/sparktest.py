@@ -9,10 +9,14 @@ spark = (
                 .getOrCreate()
 )
 
-now = datetime.datetime.now()# airflow UTC 로 인식(9시간이 느리다)
-#target_date = now + datetime.timedelta(days=1) # 스케줄은 한국시간 01:00에 시작
-target_date = now.strftime("%Y-%m-%d")
+# UTC time
+UTC = datetime.datetime.now()
+# Korea TZ
+target_date = UTC + datetime.timedelta(hours=9)
+target_date = target_date.strftime('%Y-%m-%d')
+
 print(f"{target_date}일자의 data를 정제합니다.")
+#
 file_path = f"/opt/airflow/data/ranking_{target_date}.json"
 
 print(f"{file_path}")
