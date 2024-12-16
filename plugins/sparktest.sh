@@ -2,9 +2,9 @@
 
 script=$@
 JOBNAME="RefineData"
-echo "Job name is $JOBNAME"
+echo "Job name is ${JOBNAME}"
 echo "submit this job >> ${script}"
-echo "start spark submit with bash operator"
+echo 'start spark submit with bash operator'
 
 spark-submit \
     --name ${JOBNAME} \
