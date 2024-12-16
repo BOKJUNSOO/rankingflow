@@ -2,14 +2,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.models import Variable
-
-from datetime import datetime
 import pendulum
-import time
-import requests
-import json
-from pprint import pprint
-
 # params
 # api key
 api_key = Variable.get("apikey_openapi_nexon")
