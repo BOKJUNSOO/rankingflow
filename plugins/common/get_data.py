@@ -4,6 +4,7 @@ def get_data(api_key,**kwargs):
         import requests
         import json
         from pprint import pprint
+        pprint("common fuction의 데이터 수집 함수를 호출합니다.")
         # airflow에서 Batch 시점(data_interval_end)에 한국시간
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         # 배치일 6시
