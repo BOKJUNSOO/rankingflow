@@ -20,7 +20,7 @@ print(f"{target_date}일자의 data를 정제합니다.")
 # 특정 일자의 data가 없으면 common fuction 호출해서 데이터 수집하기
 # spark python 경로 확인
 print("spark module 인식 경로:",sys.path)
-file_path = f"/opt/airflow/data/ranking_{target_date}.json"
+file_path = f"/opt/spark/data/ranking_{target_date}.json"
 
 print(f"{file_path}")
 df = spark.read \
