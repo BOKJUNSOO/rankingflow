@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 import datetime
 import sys
-from spark_common.get_data import get_data
+from spark_common.spark_filter import spark_filter
 spark = (
     SparkSession.builder \
                 .master("local")
