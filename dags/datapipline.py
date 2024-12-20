@@ -39,7 +39,8 @@ with DAG(
     file_name = "/opt/airflow/jobs/sparktest.py" # sparkjob script
     refine_data_ = BashOperator(
         task_id = "refine_data_",
-        bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}'
+        bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}',
+        trigger_rule="one_success"
     )
     
     #[ delete_data_task ]
@@ -49,6 +50,5 @@ with DAG(
     )
 
     # task flow
-    get_data_ >> check_dir_ >> [get_yesterday_data, refine_data_]
-    get_yesterday_data >> refine_data_ >> delete_data_
-    refine_data_ >> delete_data_
+    get_data_ >> check_dir_ >> get_yesterday_data >> refine_data_ >> delete_data_
+    get_data_ >> check_dir_ >> refine_data_ >> delete_data_
