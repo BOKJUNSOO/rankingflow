@@ -16,7 +16,7 @@ def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
         return ["get_yesterday_data","refine_data_","delete_data_"]
     else:
         print(f"{target_date}-어제의 데이터가 디렉터리에 존재합니다!")
-        return ["refine_data_","delete_data_"]
+        return "refine_data_"
 
 # api 로부터 데이터 수집하는 함수
 def get_data(api_key,day:str,**kwargs):
