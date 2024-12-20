@@ -36,12 +36,17 @@ with DAG(
     )
 
     #[ data_refine_task ]
+    """
     file_name = "/opt/airflow/jobs/sparktest.py" # sparkjob script
     refine_data_ = BashOperator(
         task_id = "refine_data_",
         bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}'
     )
-
+    """
+    refine_data_ = BashOperator(
+        task_id="refine_data_",
+        bash_command=" echo 'test branch' "
+    )
     #[ delete_data_task ]
     delete_data_ = BashOperator(
         task_id ="delete_data_",
