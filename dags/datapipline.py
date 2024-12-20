@@ -3,7 +3,7 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.models import Variable
 import pendulum
-from common.get_data import get_data
+from common.airflow_common import get_data
 # params
 # api key
 api_key = Variable.get("apikey_openapi_nexon")
