@@ -49,5 +49,6 @@ with DAG(
     )
 
     # task flow
-    get_data_ >> check_dir_ >> refine_data_ >> delete_data_
-    # get_data_ >> check_dir_ >> get_yesterday_data >> refine_data_ >> delete_data_
+    get_data_ >> check_dir_ >> [get_yesterday_data, refine_data_]
+    get_yesterday_data >> refine_data_ >> delete_data_
+    refine_data_ >> delete_data_
