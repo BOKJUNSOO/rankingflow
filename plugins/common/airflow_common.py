@@ -1,28 +1,42 @@
 # [Airflow의 PythonOperator에 전달할 공통함수]
-# 정제할 어떤 날짜의 데이터가 /opt/airflow/data디렉토리에 존재하는가 여부를 판단하는 함수
-def check_dir(target_date:str, root_dir:str="/opt/airflow/data"):
+
+# 수집 전날의 데이터가 제대로 존재하는가 여부를 분기처리 하는 함수
+def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     from pprint import pprint
+    from dateutil.relativedelta import relativedelta
     from glob import glob
+    # kwargs에 저장된 배치일에서 하루 전날을 계산
+    target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
+    target_date = target_date.strftime("%Y-%m-%d")
     # 디렉토리에 존재하는 파일 목록을 담을 객체
     data_list = glob(f"ranking_{target_date}.json", root_dir = root_dir )
-    # glob
+    # 하루전날 데이터가 존재하지 않는다면
     if not data_list:
-        print(f"{target_date}의 데이터가 디렉터리에 존재하지 않습니다.")
+        print(f"{target_date}-어제의 데이터가 디렉터리에 존재하지 않습니다.")
+        return "get_yesterday_data"
     else:
-        pprint(data_list)
+        print(f"{target_date}-어제의 데이터가 디렉터리에 존재합니다!")
+        return "refine_data_"
 
 # api 로부터 데이터 수집하는 함수
-def get_data(api_key,**kwargs):
+def get_data(api_key,day:str,**kwargs):
     # schedule 부하 줄이기
     import time
+    from dateutil.relativedelta import relativedelta
     import requests
     import json
     from pprint import pprint
     pprint("common fuction의 데이터 수집 함수를 호출합니다.")
     # airflow에서 Batch 시점(data_interval_end)에 한국시간
-    target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
-    # 배치일 6시
-    pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+    # 데이터 수집일 API 호출
+    if day == "today":
+        target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
+        # 배치일 6시
+        pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+    # 데이터 수집 전날 API 호출
+    if day == "yesterday":
+        target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
+        target_date = target_date.strftime("%Y-%m-%d")
     # 호출 헤더
     headers = {
         "x-nxopen-api-key" : f"{api_key}",
