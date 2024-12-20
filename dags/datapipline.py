@@ -36,7 +36,6 @@ with DAG(
     )
 
     #[ data_refine_task ]
-    
     file_name = "/opt/airflow/jobs/sparktest.py" # sparkjob script
     refine_data_ = BashOperator(
         task_id = "refine_data_",
@@ -51,4 +50,4 @@ with DAG(
 
     # task flow
     get_data_ >> check_dir_ >> refine_data_ >> delete_data_
-    get_data_ >> check_dir_ >> get_yesterday_data >> refine_data_ >> delete_data_
+    # get_data_ >> check_dir_ >> get_yesterday_data >> refine_data_ >> delete_data_
