@@ -36,22 +36,22 @@ if __name__ == "__main__":
     level_df.show(10)
 
     # // 사용할 데이터 테이블 
-    # ClassStatus table
+    # [ClassStatus table]
     class_status_df = StatusFilter(user_batch_df)
     class_status_df = class_status_df.agg_class_status()
     class_status_df.show(10)
 
-    # AchievementSummary
+    # [AchievementSummary table]
     achievement_summary_df = StatusFilter(joined_df)
     achievement_summary_df = achievement_summary_df.agg_achive_summary()
     achievement_summary_df.show(10)
                         
-    # UserExp table
-    user_exp_agg_df = ExpFilter(joined_df,level_df)
-    user_exp_agg_df = user_exp_agg_df.agg_user_exp()
+    # [UserExp table]
+    user_exp_agg_df = ExpFilter(joined_df)
+    user_exp_agg_df = user_exp_agg_df.agg_user_exp(level_df)
     user_exp_agg_df.show(10)
 
-    # ClassExp table
+    # [ClassExp table]
     class_exp_df = ExpFilter(user_exp_agg_df)
     class_exp_df = class_exp_df.agg_class_exp()
-    #class_exp_df.show(10)
+    class_exp_df.show(10)
