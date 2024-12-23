@@ -4,12 +4,12 @@ from pyspark.sql.types import StructType, IntegerType,DoubleType, StructField
 # 생성한 sparkdataframe을 정제해주는 함수(func)에 전달하는 데코레이터
 def pass_spark_dataframe(func):
     def wrapper(spark, file_path):
-        spark_df = make_spark_dataframe(spark, file_path)
+        spark_df = read_spark(spark, file_path)
         return func(spark_df)
     return wrapper
 
 # spark 객체를 이용하여 file_path에 존재하는 데이터를 읽어와 sparkdataframe을 생성하는 함수
-def make_spark_dataframe(spark:object, file_path:str)->object:
+def read_spark(spark:object, file_path:str)->object:
     if ".json" in file_path:
         spark_df = spark.read \
                     .format("json") \
