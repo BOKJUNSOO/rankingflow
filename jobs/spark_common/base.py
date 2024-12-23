@@ -10,6 +10,7 @@ class BaseFilter:
 def pass_spark_dataframe(func):
     def wrapper(spark, file_path):
         spark_df = make_spark_dataframe(spark, file_path)
+        spark_df.printSchema()
         return func(spark_df)
     return wrapper
 
