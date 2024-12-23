@@ -22,7 +22,7 @@ if __name__ == "__main__":
     batch_y_data_path= f"/opt/airflow/data/{batch_yesterday_date}" # batch전날 데이터 경로
 
     # USER 테이블 생성
-    user_df=make_user_dataframe(spark,batch_date)
+    user_df=make_user_dataframe(spark,batch_data_path)
     user_df.show(10)
                         
 
