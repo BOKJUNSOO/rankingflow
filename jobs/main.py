@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 from spark_common.base import make_user_dataframe, make_exp_dataframe
-
+from spark_common.filter import ClassStatusFilter
 if __name__ == "__main__":
 
     spark = SparkSession.builder \
@@ -23,11 +23,15 @@ if __name__ == "__main__":
 
     # USER 테이블 생성
     user_df=make_user_dataframe(spark,batch_data_path)
-    user_df.printSchema()
     user_df.show(10)
 
     # LEVEL 테이블 생성 
     level_df=make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
+
+    # Class_Status 테이블 생성
+    class_status = ClassStatusFilter()
+    class_status_df=class_status.filter(user_df)
+    class_status_df.show(10)
                         
 
