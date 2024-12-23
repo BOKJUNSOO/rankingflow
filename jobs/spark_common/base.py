@@ -50,9 +50,9 @@ def make_user_dataframe(spark_df:object)->object:
                                "USER.date",
                                "USER.class_name",
                                "USER.sub_class_name",
-                               F.col("USER.character_level").cast("integer"),
+                               F.col("USER.character_level").cast("integer").alias("character_level"),
                                "USER.character_exp",
-                               F.col("USER.ranking").cast("integer"))
+                               F.col("USER.ranking").cast("integer").alias("ranking"))
     # sub_class와 class_name 중 하나를 사용한다.
     spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
     spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
