@@ -72,6 +72,7 @@ def make_joined_dataframe(batch_df:object,yesterday_df:object)->object:
     joined_df = joined_df.select(
         batch_df["character_name"],
         batch_df["date"],
+        batch_df["class"],
         batch_df["character_level"].alias("character_level_today"),
         yesterday_df["character_level"].alias("charcter_level_yesterday"),
         batch_df["character_exp"].alias("character_exp_today"),
