@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
-from spark_common.base import make_user_dataframe, make_exp_dataframe
+from spark_common.base import make_user_dataframe, make_exp_dataframe , make_joined_dataframe
 from spark_common.filter import DataFrameFilter
 if __name__ == "__main__":
 
@@ -28,12 +28,15 @@ if __name__ == "__main__":
     # BATCH전날의 USER 테이블 생성
     user_yesterday_df=make_user_dataframe(spark,batch_y_data_path)
 
+    # Join된 Dataframe 생성성
+    joined_df=make_joined_dataframe(user_batch_df,user_yesterday_df)
     # LEVEL 테이블 생성 
     level_df=make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
     
     # 저장될 데이터 모델
     make_dataframe = DataFrameFilter()
+
     # ClassStatus table
     class_status_df = make_dataframe.agg_class_status(user_batch_df)
     class_status_df.show(10)
