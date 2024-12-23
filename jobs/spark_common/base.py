@@ -36,7 +36,7 @@ def make_exp_dataframe(spark_df:object)->object:
 
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
 @pass_spark_dataframe
-def make_user_dataframe(spark_df:object,file_path:str)->object:
+def make_user_dataframe(spark_df:object)->object:
     spark_df = spark_df.select(F.explode("ranking").alias("USER"))
     spark_df = spark_df.select("USER.character_name",
                                "USER.date",
