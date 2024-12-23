@@ -33,7 +33,6 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
                         .schema(schema) \
                         .option("multiLine", True) \
                         .load(file_path)
-        spark_df.show(10)
     return spark_df
 
 # maple_exp를 정제하여 `LEVEL` 테이블을 생성하는 함수 
