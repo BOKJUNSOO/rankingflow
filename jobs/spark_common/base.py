@@ -25,4 +25,28 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
 @pass_spark_dataframe
 def make_user_dataframe(spark_df:object)->object:
-    spark_df = spark_df(F.explode("ranking").alias())
+    spark_df = spark_df(F.explode("ranking").alias("USER"))
+    spark_df = spark_df.select("USER.character_name",
+                               "USER.date",
+                               "USER.class_name",
+                               "USER.sub_class_name",
+                               "USER.character_level",
+                               "USER.character_exp",
+                               "USER.ranking")
+    # sub_class와 class_name 중 하나를 사용한다.
+    spark_df = spark_df.withColumns("class",spark_df["sub_class_name"])
+    spark_df = spark_df.withColumns("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
+                                             .otherwise(spark_df["class"]))
+    spark_df = spark_df.drop("class_name","sub_class")
+
+    # 각 유저가 위치한 지역정보 컬럼 추가
+    spark_df = spark_df.withColumn("status",
+                       F.when(spark_df["character_level"]>=290,"Tallahart") \
+                        .when((spark_df["character_level"]<=289)&(spark_df["character_level"]>=285),"Carcion") \
+                        .when((spark_df["character_level"]<=284)&(spark_df["character_level"]>=280),"Arteria") \
+                        .when((spark_df["character_level"]<=279)&(spark_df["character_level"]>=275),"Dowonkyung") \
+                        .when((spark_df["character_level"]<=274)&(spark_df["character_level"]>=270),"Odium") \
+                        .when((spark_df["character_level"]<=269)&(spark_df["character_level"]>=265),"HotelArcs") \
+                        .when((spark_df["character_level"]<=264)&(spark_df["character_level"]>=260),"Cernium") \
+                        .otherwise("AcaneRiver"))
+    return spark_df
