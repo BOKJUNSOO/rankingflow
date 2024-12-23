@@ -1,8 +1,10 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
-from jobs.spark_common.base import make_user_dataframe
+from spark_common.base import make_user_dataframe
+import sys
 
 if __name__ == "__main__":
+    print("airflow python 경로:",sys.path)
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
