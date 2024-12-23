@@ -13,18 +13,30 @@ def pass_spark_dataframe(func):
         return func(spark_df)
     return wrapper
 
-# spark 객체를 이용하여 file_path에 존재하는 데이터를 읽어와 sparkdataframe을 생성하는 함수수
+# spark 객체를 이용하여 file_path에 존재하는 데이터를 읽어와 sparkdataframe을 생성하는 함수
 def make_spark_dataframe(spark:object, file_path:str)->object:
-    spark_df = spark.read \
+    try:
+        spark_df = spark.read \
                     .format("json") \
                     .option("multiLine", True) \
                     .load(file_path)
-    print(f"{file_path} data를 load 합니다.")
+        print(f"{file_path} data를 load 합니다.")
+    except:
+        spark_df = spark.read \
+                        .format("csv") \
+                        .option("multiLine", True) \
+                        .load(file_path)
+        print("Level 데이터 프레임을 load 합니다.")
+    return spark_df
+
+# 'LEVEL' 테이블을 정제하는 함수
+@pass_spark_dataframe
+def make_exp_dataframe(spark_df:object)->object:
     return spark_df
 
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
 @pass_spark_dataframe
-def make_user_dataframe(spark_df:object)->object:
+def make_user_dataframe(spark_df:object,file_path:str)->object:
     spark_df = spark_df.select(F.explode("ranking").alias("USER"))
     spark_df = spark_df.select("USER.character_name",
                                "USER.date",
