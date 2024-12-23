@@ -57,7 +57,7 @@ def make_user_dataframe(spark_df:object)->object:
     spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
     spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
                                              .otherwise(spark_df["class"]))
-    spark_df = spark_df.drop("class_name","sub_class")
+    spark_df = spark_df.drop("class_name","sub_class_name")
 
     # 각 유저가 위치한 지역정보 컬럼 추가
     spark_df = spark_df.withColumn("status",
