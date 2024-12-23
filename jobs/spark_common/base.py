@@ -65,3 +65,7 @@ def make_user_dataframe(spark_df:object)->object:
                         .when((spark_df["character_level"]<=264)&(spark_df["character_level"]>=260),"Cernium") \
                         .otherwise("AcaneRiver"))
     return spark_df
+
+# BATCH 일과 전날의 데이터를 JOIN하고 정제하는 함수
+def make_joined_dataframe(batch_df:object,yesterday_df:object)->object:
+    pass

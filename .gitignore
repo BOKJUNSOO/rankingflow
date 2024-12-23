@@ -2,3 +2,4 @@ venv/
 logs/
 data/*.json
 *.pyc
+notebooks/hellospark.ipynb

@@ -21,17 +21,31 @@ if __name__ == "__main__":
     batch_y_data_path= f"/opt/airflow/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
     exp_data_path= "/opt/airflow/data/maple_exp.csv"
 
-    # USER 테이블 생성
-    user_df=make_user_dataframe(spark,batch_data_path)
-    user_df.show(10)
+    # BATCH일의 USER 테이블 생성
+    user_batch_df=make_user_dataframe(spark,batch_data_path)
+    user_batch_df.show(10)
+
+    # BATCH전날의 USER 테이블 생성
+    user_yesterday_df=make_user_dataframe(spark,batch_y_data_path)
 
     # LEVEL 테이블 생성 
     level_df=make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
-
-    # Class_Status 테이블 생성
-    class_status = DataFrameFilter()
-    class_status_df = class_status.agg_status(user_df)
+    
+    # 저장될 데이터 모델
+    make_dataframe = DataFrameFilter()
+    # ClassStatus table
+    class_status_df = make_dataframe.agg_class_status(user_batch_df)
     class_status_df.show(10)
-                        
 
+    # AchievementSummary
+    achievement_summary_df = make_dataframe.agg_achive_summary(user_batch_df)
+    achievement_summary_df.show(10)
+                        
+    # UserExp table
+    user_exp_agg_df = make_dataframe.agg_user_exp(user_batch_df,user_yesterday_df,level_df)
+    user_exp_agg_df.show(10)
+
+    # ClassExp table
+    class_exp_df = make_dataframe.agg_class_exp(user_exp_agg_df)
+    class_exp_df.show(10)
