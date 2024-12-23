@@ -1,10 +1,5 @@
 import pyspark.sql.functions as F
 from pyspark.sql.types import StructType, IntegerType,DoubleType, StructField
-class BaseFilter:
-    def __init__(self,spark):
-        self.spark = spark
-    def filter():
-        pass
 
 # 생성한 sparkdataframe을 정제해주는 함수(func)에 전달하는 데코레이터
 def pass_spark_dataframe(func):
