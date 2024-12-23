@@ -1,5 +1,5 @@
 import pyspark.sql.functions as F
-
+from pyspark.sql.types import StructType, IntegerType,DoubleType, StructField
 class BaseFilter:
     def __init__(self,spark):
         self.spark = spark
@@ -21,20 +21,25 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
                     .option("multiLine", True) \
                     .load(file_path)
         print(f"{file_path} data를 load 합니다.")
-    except ValueError:
-        print("파일 경로를 확인해주세요")
-    return spark_df
-
-# 'LEVEL' 테이블을 생성하는 함수
-def make_exp_dataframe(spark:object,file_path:str)->object:
-    try:
+    except:
+        schema = StructType([
+            StructField("row_number",IntegerType(),True),
+            StructField("level",IntegerType(),True),
+            StructField("need_exp",DoubleType(), True)
+        ])
+        print("Level 테이블을 생성합니다.")
         spark_df = spark.read \
                         .format("csv") \
-                        .option("multiLine",True) \
+                        .schema(schema) \
+                        .option("multiLine", True) \
                         .load(file_path)
-        print("LEVEL 테이블을 생성합니다.")
-    except ValueError:
-        print("파일 경로를 확인해주세요")
+    return spark_df
+
+# maple_exp를 정제하여 `LEVEL` 테이블을 생성하는 함수 
+@pass_spark_dataframe
+def make_exp_dataframe(spark:object)->object:
+    spark_df = spark_df.dropna()
+    spark_df = spark_df.select("level","need_exp")
     return spark_df
         
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
