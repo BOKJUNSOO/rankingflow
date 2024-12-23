@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
-from spark_common.base import make_user_dataframe
+from spark_common.base import make_user_dataframe, make_exp_dataframe
 
 if __name__ == "__main__":
 
@@ -19,9 +19,14 @@ if __name__ == "__main__":
 
     batch_data_path= f"/opt/airflow/data/ranking_{batch_date}.json" # batch일 데이터 경로
     batch_y_data_path= f"/opt/airflow/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
+    exp_data_path= "/opt/airflow/data/maple_exp.csv"
 
     # USER 테이블 생성
     user_df=make_user_dataframe(spark,batch_data_path)
     user_df.show(10)
+
+    # 경험치 정보 테이블 생성
+    exp_df=make_exp_dataframe(spark,exp_data_path)
+    exp_df.show(10)
                         
 
