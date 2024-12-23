@@ -1,17 +1,17 @@
 import pyspark.sql.functions as F
 
 class StatusFilter:
-    def __init__(self,df):
+    def __init__(self,df:object):
         self.df = df
     # USER 테이블로부터 Class_Status 테이블을 만드는 함수
-    def agg_class_status(self):
-        df = self.df
-        filtered_df = df.groupBy("class","date").pivot("status") \
+    def agg_class_status(self)->object:
+        user_df = self.df
+        filtered_df = user_df.groupBy("class","date").pivot("status") \
                       .agg(F.count("status"))
         return filtered_df
     
     # BATCH 전날과 BATCH 일의 데이터를 이용해서 AchievementSummary 테이블을 만드는 함수
-    def agg_achive_summary(self):
+    def agg_achive_summary(self)->object:
         joined_df = self.df
         achive_df=joined_df.select("class","date","status_today","status_yesterday")
         achive_df=achive_df.withColumn("status_change", F.when((achive_df["status_today"] == achive_df["status_yesterday"]) , "stayhere" )
@@ -26,16 +26,46 @@ class StatusFilter:
         return achive_df
 
 class ExpFilter:
-    def __init__(self,df,exp_df):
+    def __init__(self,df:object,exp_df:object):
         self.df = df
-        self.exp_df = df
-    # BATCH 전날과 BATCH 일의 데이터를 이용해서 user_exp_aggregate 테이블을 만드는 함수
-    def agg_user_exp(self):
+        self.exp_df = exp_df
+        
+    # BATCH 전날과 BATCH 일의 joined된 데이터를 이용해서 user_exp_agg 테이블을 만드는 함수
+    def agg_user_exp(self)->object:
         joined_df = self.df
         exp_df = self.exp_df
+        # BATCH 전일 레벨일때 레벨업에 필요했던 경험치 컬럼을 추가
+        joined_df = joined_df.join(exp_df, joined_df["character_level_yesterday"] == exp_df["level"], how='inner')
+        joined_df = joined_df.select("*",F.col("need_exp").cast("long").alias("yesterday_need_exp")).drop("need_exp","level")
+        # BATCH 당일 레벨일때 레벨업에 필요했던 경험치 컬럼을 추가
+        joined_df = joined_df.join(exp_df, joined_df["character_level_today"] == exp_df["level"], how ='inner')
+        joined_df = joined_df.select("*",F.col("need_exp").cast("long").alias("today_need_exp")).drop("need_exp","level")
+        # BATCH 당일과 전일의 레벨이 동일한경우와 그렇지 않은경우를 고려한 획득한 경험치량(exp_gained_today) 계산
+        joined_df = joined_df.withColumn("exp_gained_today",
+                                        # 동일한 경우
+                                        F.when(joined_df["character_level_today"] == joined_df["character_level_yesterday"],
+                                                       (joined_df["character_exp_today"]-joined_df["character_exp_yesterday"]))
+                                        # 동일하지 못한 경우
+                                         .when(joined_df["character_level_yesterday"] != joined_df["character_level_yesterday"]
+                                                       ,(joined_df["yesterday_need_exp"] - joined_df["character_exp_yesterday"] + joined_df["character_exp_today"])))
+        # 레벨업에 필요한 경험치량(exp_remained_for_up)을 계산
+        joined_df = joined_df.withColumn("exp_remained_for_up", joined_df["today_need_exp"] - joined_df["character_exp_today"])
+        # 레벨업까지 필요한 예상 일자를 계산
+        joined_df = joined_df.withColumn("level_up_days_remaining", F.when(joined_df["exp_gained_today"] != 0,F.round(joined_df["exp_remained_for_up"]/joined_df["exp_gained_today"]).cast("int"))
+                                 .otherwise("we need you T.T"))
+        # 필요한 컬럼만 선택
+        user_exp_agg = joined_df.select("character_name",
+                                        "date",
+                                        "class",
+                                    F.col("character_level_today").alias("character_level"),
+                                    F.col("status_today").alias("status"),
+                                        "exp_gained_today",
+                                        "exp_remained_for_up",
+                                        "level_up_days_remaining")
+        return user_exp_agg
         
     # agg_user_exp의 리턴된 테이블로부터 class_exp_aggregate 테이블을 만드는 함수
-    def agg_class_exp(self,df):
+    def agg_class_exp(self)->object:
         pass
     
     
