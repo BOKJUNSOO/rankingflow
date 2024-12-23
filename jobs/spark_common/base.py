@@ -25,6 +25,7 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
         spark_df = spark.read \
                         .format("csv") \
                         .option("multiLine", True) \
+                        .option("inferschema", True)\
                         .load(file_path)
         print("Level 데이터 프레임을 load 합니다.")
     return spark_df
