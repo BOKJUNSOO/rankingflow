@@ -25,8 +25,8 @@ if __name__ == "__main__":
     user_df=make_user_dataframe(spark,batch_data_path)
     user_df.show(10)
 
-    # 경험치 정보 테이블 생성
-    exp_df=make_exp_dataframe(spark,exp_data_path)
-    exp_df.show(10)
+    # LEVEL 테이블 생성 
+    level_df=make_exp_dataframe(spark,exp_data_path)
+    level_df.show(10)
                         
 
