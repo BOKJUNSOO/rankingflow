@@ -8,8 +8,8 @@ class BaseFilter:
 
 # 생성한 sparkdataframe을 정제해주는 함수(func)에 전달하는 데코레이터
 def pass_spark_dataframe(func):
-    def wrapper(*args):
-        spark_df = make_spark_dataframe(*args)
+    def wrapper(spark, file_path):
+        spark_df = make_spark_dataframe(spark, file_path)
         return func(spark_df)
     return wrapper
 
