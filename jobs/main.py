@@ -30,10 +30,11 @@ if __name__ == "__main__":
 
     # Join된 Dataframe 생성성
     joined_df=make_joined_dataframe(user_batch_df,user_yesterday_df)
+
     # LEVEL 테이블 생성 
     level_df=make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
-    
+    # //
     # 저장될 데이터 모델
     make_dataframe = DataFrameFilter()
 
@@ -42,13 +43,13 @@ if __name__ == "__main__":
     class_status_df.show(10)
 
     # AchievementSummary
-    achievement_summary_df = make_dataframe.agg_achive_summary(user_batch_df)
+    achievement_summary_df = make_dataframe.agg_achive_summary(joined_df)
     achievement_summary_df.show(10)
                         
     # UserExp table
-    user_exp_agg_df = make_dataframe.agg_user_exp(user_batch_df,user_yesterday_df,level_df)
-    user_exp_agg_df.show(10)
+    #user_exp_agg_df = make_dataframe.agg_user_exp(user_batch_df,user_yesterday_df,level_df)
+    #user_exp_agg_df.show(10)
 
     # ClassExp table
-    class_exp_df = make_dataframe.agg_class_exp(user_exp_agg_df)
-    class_exp_df.show(10)
+    #class_exp_df = make_dataframe.agg_class_exp(user_exp_agg_df)
+    #class_exp_df.show(10)
