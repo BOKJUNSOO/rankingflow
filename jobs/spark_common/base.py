@@ -34,8 +34,8 @@ def make_user_dataframe(spark_df:object)->object:
                                "USER.character_exp",
                                "USER.ranking")
     # sub_class와 class_name 중 하나를 사용한다.
-    spark_df = spark_df.withColumns("class",spark_df["sub_class_name"])
-    spark_df = spark_df.withColumns("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
+    spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
+    spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
                                              .otherwise(spark_df["class"]))
     spark_df = spark_df.drop("class_name","sub_class")
 
