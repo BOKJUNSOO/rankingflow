@@ -47,10 +47,11 @@ if __name__ == "__main__":
     achievement_summary_df.show(10)
                         
     # UserExp table
-    #user_exp_agg_df = ExpFilter(joined_df,level_df)
-    #user_exp_agg_df = user_exp_agg_df.agg_user_exp()
-    #user_exp_agg_df.show(10)
+    user_exp_agg_df = ExpFilter(joined_df,level_df)
+    user_exp_agg_df = user_exp_agg_df.agg_user_exp()
+    user_exp_agg_df.show(10)
 
     # ClassExp table
-    #class_exp_df = make_dataframe.agg_class_exp(user_exp_agg_df)
+    class_exp_df = ExpFilter(user_exp_agg_df)
+    class_exp_df = class_exp_df.agg_class_exp()
     #class_exp_df.show(10)

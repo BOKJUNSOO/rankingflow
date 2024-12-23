@@ -66,7 +66,7 @@ def make_user_dataframe(spark_df:object)->object:
                         .otherwise("AcaneRiver"))
     return spark_df
 
-# BATCH 일과 전날의 데이터를 JOIN하고 정제하는 함수
+# BATCH 일과 전날에 모두 존재하는 character_name을 기준으로 JOIN하고 정제하는 함수
 def make_joined_dataframe(batch_df:object,yesterday_df:object)->object:
     joined_df = batch_df.join(yesterday_df,batch_df["character_name"] ==  yesterday_df["character_name"],how ="inner")
     joined_df = joined_df.select(
