@@ -21,20 +21,22 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
                     .option("multiLine", True) \
                     .load(file_path)
         print(f"{file_path} data를 load 합니다.")
-    except:
+    except ValueError:
+        print("파일 경로를 확인해주세요")
+    return spark_df
+
+# 'LEVEL' 테이블을 생성하는 함수
+def make_exp_dataframe(spark:object,file_path:str)->object:
+    try:
         spark_df = spark.read \
                         .format("csv") \
-                        .option("multiLine", True) \
-                        .option("inferschema", True)\
+                        .option("multiLine",True) \
                         .load(file_path)
-        print("Level 데이터 프레임을 load 합니다.")
+        print("LEVEL 테이블을 생성합니다.")
+    except ValueError:
+        print("파일 경로를 확인해주세요")
     return spark_df
-
-# 'LEVEL' 테이블을 정제하는 함수
-@pass_spark_dataframe
-def make_exp_dataframe(spark_df:object)->object:
-    return spark_df
-
+        
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
 @pass_spark_dataframe
 def make_user_dataframe(spark_df:object)->object:
