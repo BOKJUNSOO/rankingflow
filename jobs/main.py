@@ -23,6 +23,7 @@ if __name__ == "__main__":
 
     # USER 테이블 생성
     user_df=make_user_dataframe(spark,batch_data_path)
+    user_df.printSchema()
     user_df.show(10)
 
     # LEVEL 테이블 생성 
