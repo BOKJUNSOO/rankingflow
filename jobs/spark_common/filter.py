@@ -1,5 +1,5 @@
 import pyspark.sql.functions as F
-
+from pyspark.sql.window import Window
 class StatusFilter:
     def __init__(self,df:object):
         self.df = df
@@ -26,14 +26,12 @@ class StatusFilter:
         return achive_df
 
 class ExpFilter:
-    def __init__(self,df:object,exp_df:object):
+    def __init__(self,df:object):
         self.df = df
-        self.exp_df = exp_df
         
     # BATCH 전날과 BATCH 일의 joined된 데이터를 이용해서 user_exp_agg 테이블을 만드는 함수
-    def agg_user_exp(self)->object:
+    def agg_user_exp(self,exp_df)->object:
         joined_df = self.df
-        exp_df = self.exp_df
         # BATCH 전일 레벨일때 레벨업에 필요했던 경험치 컬럼을 추가
         joined_df = joined_df.join(exp_df, joined_df["character_level_yesterday"] == exp_df["level"], how='inner')
         joined_df = joined_df.select("*",F.col("need_exp").cast("long").alias("yesterday_need_exp")).drop("need_exp","level")
@@ -66,9 +64,13 @@ class ExpFilter:
         
     # agg_user_exp의 리턴된 테이블로부터 class_exp_aggregate 테이블을 만드는 함수
     def agg_class_exp(self)->object:
-        pass
-    
-    
-
-def spark_filter():
-    pass
+        agg_user_exp = self.df
+        class_exp_agg = agg_user_exp.groupBy("date","class","status").agg(
+            F.max(agg_user_exp.exp_gained_today).alias("exp_gained_max"),
+            F.sum(agg_user_exp.exp_gained_today).alias("exp_gained_sum"),
+            F.round(F.mean(agg_user_exp.exp_gained_today)).cast("long").alias("exp_gained_mean")
+        )
+        # class별 획득 경험치의 합에따른 순위 설정
+        hunt_rank = Window.partitionBy("status").orderBy(F.desc("exp_gained_sum"))
+        class_exp_agg = class_exp_agg.withColumn("hunking_rank",F.rank().over(hunt_rank))
+        return class_exp_agg
