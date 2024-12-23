@@ -39,6 +39,7 @@ def make_spark_dataframe(spark:object, file_path:str)->object:
 @pass_spark_dataframe
 def make_exp_dataframe(spark_df:object)->object:
     spark_df = spark_df.dropna()
+    spark_df.show(10)
     spark_df = spark_df.select("level","need_exp")
     return spark_df
         
