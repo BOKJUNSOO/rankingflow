@@ -16,6 +16,9 @@ def pass_spark_dataframe(func):
 # spark 객체를 이용하여 file_path에 존재하는 데이터를 읽어와 sparkdataframe을 생성하는 함수
 def make_spark_dataframe(spark:object, file_path:str)->object:
     if ".json" in file_path:
+        schema = StructType([
+            StructField("")
+        ])
         spark_df = spark.read \
                     .format("json") \
                     .option("multiLine", True) \
@@ -50,9 +53,9 @@ def make_user_dataframe(spark_df:object)->object:
                                "USER.date",
                                "USER.class_name",
                                "USER.sub_class_name",
-                               "USER.character_level",
+                               "USER.character_level".cast("integer"),
                                "USER.character_exp",
-                               "USER.ranking")
+                               "USER.ranking".cast("integer"))
     # sub_class와 class_name 중 하나를 사용한다.
     spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
     spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
