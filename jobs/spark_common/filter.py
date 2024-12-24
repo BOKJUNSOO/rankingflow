@@ -33,6 +33,7 @@ class ExpFilter:
     def agg_user_exp(self,exp_df)->object:
         joined_df = self.df
         # BATCH 전일 레벨일때 레벨업에 필요했던 경험치 컬럼을 추가
+        joined_df.show()
         joined_df = joined_df.join(exp_df, joined_df["character_level_yesterday"] == exp_df["level"], how='inner')
         joined_df = joined_df.select("*",F.col("need_exp").cast("long").alias("yesterday_need_exp")).drop("need_exp","level")
         # BATCH 당일 레벨일때 레벨업에 필요했던 경험치 컬럼을 추가
