@@ -65,6 +65,8 @@ def get_data(api_key,day:str,**kwargs):
 
     # 1페이지당 200명의 랭킹정보
     for i in range(1,300):
+        if i % 50 == 0:
+            time.sleep(15)
         if i % 20 == 0:
             print(f"{i}번째 페이지를 호출중입니다.")
             time.sleep(15)
@@ -77,6 +79,7 @@ def get_data(api_key,day:str,**kwargs):
             req = requests.get(url = url, headers = headers)
             data = req.json()
             mydata.append(data)
+    
     print("ranking_data 호출이 끝났습니다.")
     
     # 호출된 데이터 객체를 data 디렉토리에 저장
