@@ -16,6 +16,12 @@ with DAG(
     catchup=False
 ) as dag :
 
+     # [ check_dir_task ] - branch !
+    check_dir_ = BranchPythonOperator(
+        task_id="check_dir_",
+        python_callable=check_dir
+    )
+
     #[ get_data_task ]
     get_data_ = PythonOperator(
         task_id = "get_data_",
@@ -23,11 +29,6 @@ with DAG(
         op_args=[api_key,"today"]
     )
 
-    # [ check_dir_task ] - branch !
-    check_dir_ = BranchPythonOperator(
-        task_id="check_dir_",
-        python_callable=check_dir
-    )
     # [ get_yesterday_data_task ]
     get_yesterday_data = PythonOperator(
         task_id="get_yesterday_data",
@@ -50,5 +51,4 @@ with DAG(
     )
 
     # task flow
-    get_data_ >> check_dir_ >> get_yesterday_data >> refine_data_ >> delete_data_
-    get_data_ >> check_dir_ >> refine_data_ >> delete_data_
+    check_dir_ >> [get_data_,get_yesterday_data] >> refine_data_ >> delete_data_
