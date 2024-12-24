@@ -55,4 +55,3 @@ with DAG(
     check_dir_ >> get_today_data_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
     check_dir_ >> get_today_data_ >> refine_data_ >> delete_data_
     check_dir_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
-    check_dir_ >> refine_data_
