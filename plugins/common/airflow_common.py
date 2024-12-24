@@ -65,7 +65,7 @@ def get_data(api_key,day:str,**kwargs):
     mydata = []
 
     # 1페이지당 200명의 랭킹정보
-    for i in range(1,2):
+    for i in range(1,300):
         if i % 20 == 0:
             time.sleep(15)
             url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
