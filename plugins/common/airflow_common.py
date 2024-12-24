@@ -21,12 +21,14 @@ def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     # BATCH일의 DATA가 없다면
     if not data_list:
         print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
+        # BATCH전날의 DATA를 수집하는 TASK를 실행
         list_.append("get_yesterday_data")
-    # 두 일자 모두 데이터가 존재한다면 refine_data_ task를 리턴
-    if len(list_) == 2:
-        return "refine_data_"
-    # 그렇지 않다면 list에 담긴 task를 리턴
-    return list_
+    # 한 일자라도 데이터가 존재하지 않는다면
+    if len(list_) >= 1:
+        # 해당 task 리턴
+        return list_
+    # 두 일자의 데이터가 모두 존재한다면
+    return "refine_data_"
 
 # api 로부터 데이터 수집하는 함수
 def get_data(api_key,day:str,**kwargs):
