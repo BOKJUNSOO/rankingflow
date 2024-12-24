@@ -2,7 +2,6 @@
 
 # 데이터가 디렉토리에 존재하는가 여부를 분기처리 하는 함수
 def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
-    from pprint import pprint
     from dateutil.relativedelta import relativedelta
     from glob import glob
 
