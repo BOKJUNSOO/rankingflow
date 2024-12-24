@@ -33,8 +33,7 @@ with DAG(
     get_yesterday_data_ = PythonOperator(
         task_id="get_yesterday_data_",
         python_callable=get_data,
-        op_args=[api_key,"yesterday"],
-        trigger_rule="none_failed_min_one_success"
+        op_args=[api_key,"yesterday"]
     )
 
     #[ data_refine_task ]
@@ -53,4 +52,6 @@ with DAG(
 
     # task flow
     check_dir_ >> get_today_data_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
+    check_dir_ >> get_today_data_ >> refine_data_ >> delete_data_
+    check_dir_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
     check_dir_ >> refine_data_
