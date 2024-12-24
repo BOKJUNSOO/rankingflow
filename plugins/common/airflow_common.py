@@ -35,7 +35,7 @@ def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
             next_task = "get_yesterday_data_"
         else:
             print(f"{before_batch_date}일자의 데이터가 존재합니다.")
-            next_task = "refine_data_"
+            next_task = "check_data_quality_"
     return next_task
     
 
