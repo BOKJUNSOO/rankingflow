@@ -64,7 +64,7 @@ def get_data(api_key,day:str,**kwargs):
     mydata = []
 
     # 1페이지당 200명의 랭킹정보
-    for i in range(1,300):
+    for i in range(1,301):
         if i % 50 == 0:
             time.sleep(15)
         if i % 20 == 0:
