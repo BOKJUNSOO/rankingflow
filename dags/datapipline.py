@@ -46,7 +46,7 @@ with DAG(
     file_name = "/opt/airflow/jobs/main.py" # sparkjob script
     refine_data_ = BashOperator(
         task_id = "refine_data_",
-        bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}',
+        bash_command=f'/opt/airflow/plugins/sparksubmit.sh {file_name}',
         trigger_rule="none_failed"
     )
     
