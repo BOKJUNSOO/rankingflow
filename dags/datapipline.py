@@ -23,15 +23,15 @@ with DAG(
     )
 
     #[ get_data_task ]
-    get_data_ = PythonOperator(
-        task_id = "get_data_",
+    get_today_data_ = PythonOperator(
+        task_id = "get_today_data_",
         python_callable=get_data,
         op_args=[api_key,"today"]
     )
 
     # [ get_yesterday_data_task ]
-    get_yesterday_data = PythonOperator(
-        task_id="get_yesterday_data",
+    get_yesterday_data_ = PythonOperator(
+        task_id="get_yesterday_data_",
         python_callable=get_data,
         op_args=[api_key,"yesterday"]
     )
@@ -51,4 +51,4 @@ with DAG(
     )
 
     # task flow
-    check_dir_ >> [get_data_,get_yesterday_data] >> refine_data_ >> delete_data_
+    check_dir_ >> [get_today_data_,get_yesterday_data_] >> refine_data_ >> delete_data_
