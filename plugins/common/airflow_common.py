@@ -42,20 +42,19 @@ def get_data(api_key,day:str,**kwargs):
     from dateutil.relativedelta import relativedelta
     import requests
     import json
-    from pprint import pprint
-    pprint("common fuction의 데이터 수집 함수를 호출합니다.")
+    print("common fuction의 데이터 수집 함수를 호출합니다.")
 
     # 데이터 수집일 API 호출
     if day == "today":
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         # 배치일 6시
-        pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+        print(f"{target_date} 의 rankingdata 호출을 시작합니다.")
     
     # 데이터 수집 전날 API 호출
     if day == "yesterday":
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
         target_date = target_date.strftime("%Y-%m-%d")
-    
+        print(f"{target_date} 의 rankingdata 호출을 시작합니다.")
     # 호출 헤더
     headers = {
         "x-nxopen-api-key" : f"{api_key}",
@@ -67,6 +66,7 @@ def get_data(api_key,day:str,**kwargs):
     # 1페이지당 200명의 랭킹정보
     for i in range(1,300):
         if i % 20 == 0:
+            print(f"{i}번째 페이지를 호출중입니다.")
             time.sleep(15)
             url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
             req = requests.get(url = url, headers = headers)
@@ -77,10 +77,11 @@ def get_data(api_key,day:str,**kwargs):
             req = requests.get(url = url, headers = headers)
             data = req.json()
             mydata.append(data)
-    pprint(mydata)
+    print("ranking_data 호출이 끝났습니다.")
     
     # 호출된 데이터 객체를 data 디렉토리에 저장
     file_path = f"/opt/airflow/data/ranking_{target_date}.json"
     with open (file_path, "w", encoding = "UTF-8-SIG") as f:
         json.dump(mydata,f,ensure_ascii=False,indent='\t')
         print("done")
+    return
