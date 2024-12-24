@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 from spark_common.base import make_user_dataframe, make_exp_dataframe , make_joined_dataframe
-from spark_common.filter import StatusFilter , ExpFilter
+from spark_common.filter import RankingDataModel
 if __name__ == "__main__":
 
     spark = SparkSession.builder \
@@ -37,21 +37,21 @@ if __name__ == "__main__":
 
     # // 사용할 데이터 테이블 
     # [ClassStatus table]
-    class_status_df = StatusFilter(user_batch_df)
+    class_status_df = RankingDataModel(user_batch_df)
     class_status_df = class_status_df.agg_class_status()
     class_status_df.show(10)
 
     # [AchievementSummary table]
-    achievement_summary_df = StatusFilter(joined_df)
+    achievement_summary_df = RankingDataModel(joined_df)
     achievement_summary_df = achievement_summary_df.agg_achive_summary()
     achievement_summary_df.show(10)
                         
     # [UserExp table]
-    user_exp_agg_df = ExpFilter(joined_df)
+    user_exp_agg_df = RankingDataModel(joined_df)
     user_exp_agg_df = user_exp_agg_df.agg_user_exp(level_df)
     user_exp_agg_df.show(10)
 
     # [ClassExp table]
-    class_exp_df = ExpFilter(user_exp_agg_df)
+    class_exp_df = RankingDataModel(user_exp_agg_df)
     class_exp_df = class_exp_df.agg_class_exp()
     class_exp_df.show(10)
