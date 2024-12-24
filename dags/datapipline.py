@@ -67,8 +67,8 @@ with DAG(
         trigger_rule="none_failed"
     )
     # task flow
-    check_today_data_ >> check_yesterday_data_ >> check_data_quality_ >> refine_data_
-    check_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_>> refine_data_
-    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> check_data_quality_ >> refine_data_
-    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_ >> refine_data_
-    refine_data_ >> delete_data_
+    check_today_data_ >> check_yesterday_data_ >> check_data_quality_
+    check_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> check_data_quality_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_
+    check_data_quality_ >> refine_data_ >> delete_data_
