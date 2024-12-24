@@ -16,13 +16,19 @@ with DAG(
     catchup=False
 ) as dag :
 
-     # [ check_dir_task ] - branch !
-    check_dir_ = BranchPythonOperator(
-        task_id="check_dir_",
-        python_callable=check_dir
+     # [ check_today_data_task ]
+    check_today_data_ = BranchPythonOperator(
+        task_id="check_today_data_",
+        python_callable=check_dir,
+        op_args=["today"]
     )
-
-    #[ get_data_task ]
+    # [ check_yesterday_data_task ]
+    check_yesterday_data_ = BranchPythonOperator(
+        task_id="check_yesterday_data",
+        python_callable=check_dir,
+        op_args=["yesterday"]
+    )
+    # [ get_data_task ]
     get_today_data_ = PythonOperator(
         task_id = "get_today_data_",
         python_callable=get_data,
@@ -33,8 +39,7 @@ with DAG(
     get_yesterday_data_ = PythonOperator(
         task_id="get_yesterday_data_",
         python_callable=get_data,
-        op_args=[api_key,"yesterday"],
-        trigger_rule="none_failed"
+        op_args=[api_key,"yesterday"]
     )
 
     #[ data_refine_task ]
@@ -52,6 +57,8 @@ with DAG(
     )
 
     # task flow
-    check_dir_ >> get_today_data_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
-    check_dir_ >> get_today_data_ >> refine_data_ >> delete_data_
-    check_dir_ >> get_yesterday_data_ >> refine_data_ >> delete_data_
+    check_today_data_ >> check_yesterday_data_ >> refine_data_
+    check_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> refine_data_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> refine_data_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> refine_data_
+    refine_data_ >> delete_data_
