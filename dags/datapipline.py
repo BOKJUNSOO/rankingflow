@@ -26,7 +26,8 @@ with DAG(
     check_yesterday_data_ = BranchPythonOperator(
         task_id="check_yesterday_data_",
         python_callable=check_dir,
-        op_args=["yesterday"]
+        op_args=["yesterday"],
+        trigger_rule="none_failed"
     )
     # [ get_data_task ]
     get_today_data_ = PythonOperator(
