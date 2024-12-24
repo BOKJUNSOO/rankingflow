@@ -58,7 +58,7 @@ with DAG(
 
     # [ check_data_quality_task ]
     check_data_quality_ = BashOperator(
-        task_id="check_data_quality",
+        task_id="check_data_quality_",
         env={
             'batch_date':'{{ data_interval_end.in_timezone("Asia/Seoul") | ds}}',
             'before_batch_date':'{{ data_interval_start.in_timezone("Asia/Seoul") | ds}}'
