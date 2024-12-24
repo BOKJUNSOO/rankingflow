@@ -33,8 +33,7 @@ with DAG(
     get_yesterday_data_ = PythonOperator(
         task_id="get_yesterday_data_",
         python_callable=get_data,
-        op_args=[api_key,"yesterday"],
-        trigger_rule="none_failed"
+        op_args=[api_key,"yesterday"]
     )
 
     #[ data_refine_task ]
