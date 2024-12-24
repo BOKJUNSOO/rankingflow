@@ -24,7 +24,7 @@ with DAG(
     )
     # [ check_yesterday_data_task ]
     check_yesterday_data_ = BranchPythonOperator(
-        task_id="check_yesterday_data",
+        task_id="check_yesterday_data_",
         python_callable=check_dir,
         op_args=["yesterday"]
     )
