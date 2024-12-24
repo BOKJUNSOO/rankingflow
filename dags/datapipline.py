@@ -41,7 +41,7 @@ with DAG(
     refine_data_ = BashOperator(
         task_id = "refine_data_",
         bash_command=f'/opt/airflow/plugins/sparktest.sh {file_name}',
-        trigger_rule="one_success"
+        trigger_rule="always Task"
     )
     
     #[ delete_data_task ]c
