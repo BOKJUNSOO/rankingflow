@@ -15,7 +15,7 @@ def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     if not data_list:
         print(f"{batch_date}일자의 데이터가 존재하지 않습니다.")
         # BATCH일의 DATA를 수집하는 TASK를 실행
-        list_.append("get_data_")
+        list_.append("get_today_data_")
 
     # BATCH 전날의 DATA가 수집되어 있는지 확인
     before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
@@ -26,7 +26,7 @@ def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     if not data_list:
         print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
         # BATCH전날의 DATA를 수집하는 TASK를 실행
-        list_.append("get_yesterday_data")
+        list_.append("get_yesterday_data_")
     
     # 한 일자라도 데이터가 존재하지 않는다면
     if len(list_) >= 1:
