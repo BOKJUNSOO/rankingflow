@@ -9,6 +9,7 @@ def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
     # BATCH일의 DATA가 수집되어 있는지 확인
     if day == "today":
         batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
+        print(f"{batch_date}의 데이터가 존재하는지 확인합니다.")
         data_list = glob(f"ranking_{batch_date}.json",root_dir = root_dir)
 
         # BATCH일의 DATA가 없다면
@@ -17,12 +18,14 @@ def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
             # BATCH일의 DATA를 수집하는 TASK를 실행
             next_task = "get_today_data_"
         else:
+            print(f"{batch_date}일자의 데이터가 존재합니다.")
             next_task = "check_yesterday_data_"
 
     # BATCH 전날의 DATA가 수집되어 있는지 확인
     if day == "yesterday":
         before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
         before_batch_date = before_batch_date.strftime("%Y-%m-%d")
+        print(f"{before_batch_date}의 데이터가 존재하는지 확인합니다.")
         data_list = glob(f"ranking_{before_batch_date}.json", root_dir = root_dir )
 
         # BATCH일의 DATA가 없다면
@@ -31,6 +34,7 @@ def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
             # BATCH전날의 DATA를 수집하는 TASK를 실행
             next_task = "get_yesterday_data_"
         else:
+            print(f"{before_batch_date}일자의 데이터가 존재합니다.")
             next_task = "refine_data_"
     return next_task
     
