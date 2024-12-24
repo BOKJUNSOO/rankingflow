@@ -55,7 +55,7 @@ with DAG(
         task_id ="delete_data_",
         bash_command=" echo 'delete data' "
     )
-    
+
     # [ check_data_quality_task ]
     check_data_quality_ = BashOperator(
         task_id="check_data_quality",
@@ -63,7 +63,8 @@ with DAG(
             'batch_date':'{{ data_interval_end.in_timezone("Asia/Seoul") | ds}}',
             'before_batch_date':'{{ data_interval_start.in_timezone("Asia/Seoul") | ds}}'
         },
-        bash_command=f"/opt/airflow/plugins/check_data.sh $batch_date $before_batch_date"
+        bash_command=f"/opt/airflow/plugins/check_data.sh $batch_date $before_batch_date",
+        trigger_rule="none_failed"
     )
     # task flow
     check_today_data_ >> check_yesterday_data_ >> check_data_quality_ >> refine_data_
