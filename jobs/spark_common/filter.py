@@ -1,6 +1,6 @@
 import pyspark.sql.functions as F
 from pyspark.sql.window import Window
-class StatusFilter:
+class RankingDataModel:
     def __init__(self,df:object):
         self.df = df
     # USER 테이블로부터 Class_Status 테이블을 만드는 함수
@@ -24,10 +24,6 @@ class StatusFilter:
                                                     .when((achive_df["status_today"] != achive_df["status_yesterday"])&(achive_df["status_today"]=="Cernium"), "welcome to Cernium"))
         achive_df = achive_df.groupBy("class","date","status_change").agg(F.count("*").alias("count"))
         return achive_df
-
-class ExpFilter:
-    def __init__(self,df:object):
-        self.df = df
         
     # BATCH 전날과 BATCH 일의 joined된 데이터를 이용해서 user_exp_agg 테이블을 만드는 함수
     def agg_user_exp(self,exp_df)->object:
