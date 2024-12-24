@@ -33,7 +33,8 @@ with DAG(
     get_yesterday_data_ = PythonOperator(
         task_id="get_yesterday_data_",
         python_callable=get_data,
-        op_args=[api_key,"yesterday"]
+        op_args=[api_key,"yesterday"],
+        trigger_rule="none_failed"
     )
 
     #[ data_refine_task ]
@@ -44,7 +45,7 @@ with DAG(
         trigger_rule="none_failed"
     )
     
-    #[ delete_data_task ]c
+    #[ delete_data_task ]
     delete_data_ = BashOperator(
         task_id ="delete_data_",
         bash_command=" echo 'delete data' "
