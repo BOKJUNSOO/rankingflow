@@ -7,7 +7,6 @@ from common.airflow_common import get_data, check_dir
 # params
 # api key
 api_key = Variable.get("apikey_openapi_nexon")
-
 # DAG
 with DAG(
     dag_id = "dags_get_data_python_operator",
@@ -56,10 +55,19 @@ with DAG(
         task_id ="delete_data_",
         bash_command=" echo 'delete data' "
     )
-
+    
+    # [ check_data_quality_task ]
+    check_data_quality_ = BashOperator(
+        task_id="check_data_quality",
+        env={
+            'batch_date':'{{ data_interval_end.in_timezone("Asia/Seoul") | ds}}',
+            'before_batch_date':'{{ data_interval_start.in_timezone("Asia/Seoul") | ds}}'
+        },
+        bash_command=f"/opt/airflow/plugins/check_data.sh $batch_date $before_batch_date"
+    )
     # task flow
-    check_today_data_ >> check_yesterday_data_ >> refine_data_
-    check_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> refine_data_
-    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> refine_data_
-    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> refine_data_
+    check_today_data_ >> check_yesterday_data_ >> check_data_quality_ >> refine_data_
+    check_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_>> refine_data_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> check_data_quality_ >> refine_data_
+    check_today_data_ >> get_today_data_ >> check_yesterday_data_ >> get_yesterday_data_ >> check_data_quality_ >> refine_data_
     refine_data_ >> delete_data_
