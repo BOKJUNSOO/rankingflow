@@ -1,22 +1,32 @@
 # [Airflow의 PythonOperator에 전달할 공통함수]
 
-# 수집 전날의 데이터가 제대로 존재하는가 여부를 분기처리 하는 함수
+# 데이터가 디렉토리에 존재하는가 여부를 분기처리 하는 함수
 def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     from pprint import pprint
     from dateutil.relativedelta import relativedelta
     from glob import glob
-    # kwargs에 저장된 배치일에서 하루 전날을 계산
-    target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
-    target_date = target_date.strftime("%Y-%m-%d")
-    # 디렉토리에 존재하는 파일 목록을 담을 객체
-    data_list = glob(f"ranking_{target_date}.json", root_dir = root_dir )
-    # 하루전날 데이터가 존재하지 않는다면
+    list_=[]
+    # BATCH일의 DATA가 수집되어 있는지 확인
+    batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
+    data_list = glob(f"ranking_{batch_date}.json",root_dir = root_dir)
+    # BATCH일의 DATA가 없다면
     if not data_list:
-        print(f"{target_date}-어제의 데이터가 디렉터리에 존재하지 않습니다.")
-        return "get_yesterday_data"
-    else:
-        print(f"{target_date}-어제의 데이터가 디렉터리에 존재합니다!")
+        print(f"{batch_date}일자의 데이터가 존재하지 않습니다.")
+        # BATCH일의 DATA를 수집하는 TASK를 실행
+        list_.append("get_data_")
+    # BATCH 전날의 DATA가 수집되어 있는지 확인
+    before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
+    before_batch_date = before_batch_date.strftime("%Y-%m-%d")
+    data_list = glob(f"ranking_{before_batch_date}.json", root_dir = root_dir )
+    # BATCH일의 DATA가 없다면
+    if not data_list:
+        print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
+        list_.append("get_yesterday_data")
+    # 두 일자 모두 데이터가 존재한다면 refine_data_ task를 리턴
+    if len(list_) == 2:
         return "refine_data_"
+    # 그렇지 않다면 list에 담긴 task를 리턴
+    return list_
 
 # api 로부터 데이터 수집하는 함수
 def get_data(api_key,day:str,**kwargs):
