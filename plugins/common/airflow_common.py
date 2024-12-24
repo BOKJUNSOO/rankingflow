@@ -1,39 +1,39 @@
 # [Airflow의 PythonOperator에 전달할 공통함수]
 
 # 데이터가 디렉토리에 존재하는가 여부를 분기처리 하는 함수
-def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
+def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
     from pprint import pprint
     from dateutil.relativedelta import relativedelta
     from glob import glob
-    list_=[]
 
     # BATCH일의 DATA가 수집되어 있는지 확인
-    batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
-    data_list = glob(f"ranking_{batch_date}.json",root_dir = root_dir)
+    if day == "today":
+        batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
+        data_list = glob(f"ranking_{batch_date}.json",root_dir = root_dir)
 
-    # BATCH일의 DATA가 없다면
-    if not data_list:
-        print(f"{batch_date}일자의 데이터가 존재하지 않습니다.")
-        # BATCH일의 DATA를 수집하는 TASK를 실행
-        list_.append("get_today_data_")
+        # BATCH일의 DATA가 없다면
+        if not data_list:
+            print(f"{batch_date}일자의 데이터가 존재하지 않습니다.")
+            # BATCH일의 DATA를 수집하는 TASK를 실행
+            next_task = "get_today_data_"
+        else:
+            next_task = "check_yesterday_data_"
 
     # BATCH 전날의 DATA가 수집되어 있는지 확인
-    before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
-    before_batch_date = before_batch_date.strftime("%Y-%m-%d")
-    data_list = glob(f"ranking_{before_batch_date}.json", root_dir = root_dir )
+    if day == "yesterday":
+        before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
+        before_batch_date = before_batch_date.strftime("%Y-%m-%d")
+        data_list = glob(f"ranking_{before_batch_date}.json", root_dir = root_dir )
 
-    # BATCH일의 DATA가 없다면
-    if not data_list:
-        print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
-        # BATCH전날의 DATA를 수집하는 TASK를 실행
-        list_.append("get_yesterday_data_")
+        # BATCH일의 DATA가 없다면
+        if not data_list:
+            print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
+            # BATCH전날의 DATA를 수집하는 TASK를 실행
+            next_task = "get_yesterday_data_"
+        else:
+            next_task = "refine_data_"
+    return next_task
     
-    # 한 일자라도 데이터가 존재하지 않는다면
-    if len(list_) >= 1:
-        # 해당 task 리턴
-        return list_
-    # 두 일자의 데이터가 모두 존재한다면
-    return "refine_data_"
 
 # api 로부터 데이터 수집하는 함수
 def get_data(api_key,day:str,**kwargs):
