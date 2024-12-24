@@ -6,23 +6,28 @@ def check_dir(root_dir:str="/opt/airflow/data",**kwargs)->str:
     from dateutil.relativedelta import relativedelta
     from glob import glob
     list_=[]
+
     # BATCH일의 DATA가 수집되어 있는지 확인
     batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
     data_list = glob(f"ranking_{batch_date}.json",root_dir = root_dir)
+
     # BATCH일의 DATA가 없다면
     if not data_list:
         print(f"{batch_date}일자의 데이터가 존재하지 않습니다.")
         # BATCH일의 DATA를 수집하는 TASK를 실행
         list_.append("get_data_")
+
     # BATCH 전날의 DATA가 수집되어 있는지 확인
     before_batch_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
     before_batch_date = before_batch_date.strftime("%Y-%m-%d")
     data_list = glob(f"ranking_{before_batch_date}.json", root_dir = root_dir )
+
     # BATCH일의 DATA가 없다면
     if not data_list:
         print(f"{before_batch_date}일자의 데이터가 존재하지 않습니다.")
         # BATCH전날의 DATA를 수집하는 TASK를 실행
         list_.append("get_yesterday_data")
+    
     # 한 일자라도 데이터가 존재하지 않는다면
     if len(list_) >= 1:
         # 해당 task 리턴
@@ -39,16 +44,18 @@ def get_data(api_key,day:str,**kwargs):
     import json
     from pprint import pprint
     pprint("common fuction의 데이터 수집 함수를 호출합니다.")
-    # airflow에서 Batch 시점(data_interval_end)에 한국시간
+
     # 데이터 수집일 API 호출
     if day == "today":
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul").strftime("%Y-%m-%d")
         # 배치일 6시
         pprint(f"{target_date} 의 rankingdata 호출을 시작합니다.")
+    
     # 데이터 수집 전날 API 호출
     if day == "yesterday":
         target_date = kwargs["data_interval_end"].in_timezone("Asia/Seoul") + relativedelta(days=-1)
         target_date = target_date.strftime("%Y-%m-%d")
+    
     # 호출 헤더
     headers = {
         "x-nxopen-api-key" : f"{api_key}",
@@ -56,6 +63,7 @@ def get_data(api_key,day:str,**kwargs):
         }
     # json 파일을 담을 객체
     mydata = []
+
     # 1페이지당 200명의 랭킹정보
     for i in range(1,2):
         if i % 20 == 0:
@@ -70,6 +78,7 @@ def get_data(api_key,day:str,**kwargs):
             data = req.json()
             mydata.append(data)
     pprint(mydata)
+    
     # 호출된 데이터 객체를 data 디렉토리에 저장
     file_path = f"/opt/airflow/data/ranking_{target_date}.json"
     with open (file_path, "w", encoding = "UTF-8-SIG") as f:
