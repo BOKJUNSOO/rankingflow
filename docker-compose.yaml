@@ -346,7 +346,7 @@ services:
         condition: service_completed_successfully
 
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
     networks:
       - default-net
     environment:
@@ -370,7 +370,7 @@ services:
       - 9200:9200
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.4.3
+    image: docker.elastic.co/kibana/kibana:8.7.1
     networks:
       - default-net
     environment:
