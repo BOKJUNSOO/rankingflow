@@ -350,9 +350,9 @@ services:
     networks:
       - default-net
     environment:
-      - node.name=es
+      - node.name=es01
       - discovery.type=single-node
-      - discovery.seed_hosts=es
+      - discovery.seed_hosts=es01
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
       - xpack.security.http.ssl.enabled=false
