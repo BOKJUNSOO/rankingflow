@@ -478,6 +478,8 @@ services:
   
 networks:
   default-net:
+    name: elastic
+    external: false
 
 volumes:
   postgres-db-volume:
