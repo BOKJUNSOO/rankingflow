@@ -9,7 +9,7 @@ class ElasticSearch:
         df.write \
           .mode(self.es_mode) \
           .format("org.elasticsearch.spark.sql") \
-          .option("es.nodes", self.es_host) \
+          .option("es.nodes", self.host_name) \
           .option("es.index.auto.create", self.es_index_auto_create) \
           .option("es.resource", es_resource) \
           .save()
