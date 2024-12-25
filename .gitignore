@@ -3,3 +3,6 @@ logs/
 data/*.json
 *.pyc
 notebooks/hellospark.ipynb
+esdata01/
+kibanadata/
+certs/
