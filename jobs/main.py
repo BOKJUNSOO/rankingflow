@@ -8,7 +8,6 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
-                        .config("spark.driver.extraClassPath","/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2-javadoc.jar") \
                         .config("spark.jars","/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2-javadoc.jar") \
                         .getOrCreate()
                         
@@ -61,7 +60,7 @@ if __name__ == "__main__":
 
     # save_data
     save_to_elastic_search=ElasticSearch("https://es01:9200")
-    save_to_elastic_search.write(class_status_df)
-    save_to_elastic_search.write(achievement_summary_df)
-    save_to_elastic_search.write(user_exp_agg_df)
-    save_to_elastic_search.write(class_exp_df)
+    save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
+    save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
+    save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
+    save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
