@@ -2,13 +2,16 @@ from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 from spark_common.base import make_user_dataframe, make_exp_dataframe , make_joined_dataframe
 from spark_common.filter import RankingDataModel
+from spark_common.save import ElasticSearch
 if __name__ == "__main__":
 
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
+                        .config("spark.driver.extraClassPath","/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2-javadoc.jar") \
+                        .config("spark.jars","/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2-javadoc.jar") \
                         .getOrCreate()
-                        #.config()
+                        
     # batch일자의 data와 batch 전날 data를 load
     UTC = datetime.now()
     batch_date= UTC + timedelta(hours=9)
@@ -55,3 +58,10 @@ if __name__ == "__main__":
     class_exp_df = RankingDataModel(user_exp_agg_df)
     class_exp_df = class_exp_df.agg_class_exp()
     class_exp_df.show(10)
+
+    # save_data
+    save_to_elastic_search=ElasticSearch("https://es01:9200")
+    save_to_elastic_search.write(class_status_df)
+    save_to_elastic_search.write(achievement_summary_df)
+    save_to_elastic_search.write(user_exp_agg_df)
+    save_to_elastic_search.write(class_exp_df)

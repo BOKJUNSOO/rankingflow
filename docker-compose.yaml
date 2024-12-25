@@ -98,6 +98,7 @@ x-spark-common:
   volumes:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
+    - ./resources:/opt/bitnami/spark/resources
   networks:
     - default-net
 
