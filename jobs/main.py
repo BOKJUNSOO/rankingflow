@@ -8,8 +8,8 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
-                        .config("spark.driver.extraClassPath", "/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
-                        .config("spark.jars","/opt/bitnami/spark/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
+                        .config("spark.driver.extraClassPath", "/opt/airflow/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
+                        .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
                         .getOrCreate()
                         
     # batch일자의 data와 batch 전날 data를 load

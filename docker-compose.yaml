@@ -81,6 +81,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ./data:/opt/airflow/data
     - ./jobs:/opt/airflow/jobs
+    - ./resources:/opt/airflow/resources
   networks:
     - default-net
   user: "${AIRFLOW_UID:-50000}:0"
