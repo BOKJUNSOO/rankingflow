@@ -345,18 +345,6 @@ services:
   
   es-setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-    environment:
-      ELASTIC_PASSWORD: passwd
-      KIBANA_PASSWORD: passwd
-      STACK_VERSION: 8.7.1
-      CLUSTER_NAME: docker-cluster
-      LICENSE: basic
-      ES_PORT: 9200
-      KIBANA_PORT: 5601
-      ES_MEM_LIMIT: 1073741824
-      KB_MEM_LIMIT: 1073741824
-      LS_MEM_LIMIT: 1073741824
-      ENCRYPTION_KEY: c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2
     volumes:
      - certs:/usr/share/elasticsearch/config/certs
     user: "0"
@@ -414,8 +402,77 @@ services:
     depends_on:
       es-setup:
         condition: service_healthy
-
-      
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    labels:
+     co.elastic.logs/module: elasticsearch
+    volumes:
+     - certs:/usr/share/elasticsearch/config/certs
+     - esdata01:/usr/share/elasticsearch/data
+    ports:
+     - ${ES_PORT}:9200
+    environment:
+     - node.name=es01
+     - cluster.name=${CLUSTER_NAME}
+     - discovery.type=single-node
+     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+     - bootstrap.memory_lock=true
+     - xpack.security.enabled=true
+     - xpack.security.http.ssl.enabled=true
+     - xpack.security.http.ssl.key=certs/es01/es01.key
+     - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+     - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+     - xpack.security.transport.ssl.enabled=true
+     - xpack.security.transport.ssl.key=certs/es01/es01.key
+     - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+     - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+     - xpack.security.transport.ssl.verification_mode=certificate
+     - xpack.license.self_generated.type=${LICENSE}
+    mem_limit: ${ES_MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test:
+       [
+         "CMD-SHELL",
+         "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+       ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+  
+  kibana:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    labels:
+     co.elastic.logs/module: kibana
+    volumes:
+     - certs:/usr/share/kibana/config/certs
+     - kibanadata:/usr/share/kibana/data
+    ports:
+     - ${KIBANA_PORT}:5601
+    environment:
+     - SERVERNAME=kibana
+     - ELASTICSEARCH_HOSTS=https://es01:9200
+     - ELASTICSEARCH_USERNAME=kibana_system
+     - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+     - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+     - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+     - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+     - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+    mem_limit: ${KB_MEM_LIMIT}
+    healthcheck:
+      test:
+       [
+         "CMD-SHELL",
+         "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+       ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
   
 networks:
   default-net:
