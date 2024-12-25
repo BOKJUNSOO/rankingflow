@@ -404,6 +404,8 @@ services:
     depends_on:
       es-setup:
         condition: service_healthy
+    networks:
+      - default-net
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     labels:
      co.elastic.logs/module: elasticsearch
@@ -450,6 +452,8 @@ services:
     depends_on:
       es01:
         condition: service_healthy
+    networks:
+      - default-net
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     labels:
      co.elastic.logs/module: kibana
