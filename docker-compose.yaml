@@ -44,6 +44,21 @@
 #
 # Feel free to modify this file to suit your needs.
 ---
+networks:
+  default:
+    name: elastic
+    external: false
+
+volumes:
+  postgres-db-volume:
+    driver: local
+  certs:
+    driver: local
+  esdata01:
+    driver: local
+  kibanadata:
+    driver: local
+    
 x-airflow-common:
   &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
@@ -480,18 +495,3 @@ services:
      interval: 10s
      timeout: 10s
      retries: 120
-
-networks:
-  default:
-    name: elastic
-    external: false
-
-volumes:
-  postgres-db-volume:
-    driver: local
-  certs:
-    driver: local
-  esdata01:
-    driver: local
-  kibanadata:
-    driver: local
