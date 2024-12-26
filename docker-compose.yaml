@@ -420,7 +420,7 @@ services:
        condition: service_healthy
    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
    networks:
-     - default
+     - elastic
    labels:
      co.elastic.logs/module: elasticsearch
    volumes:
@@ -465,8 +465,6 @@ services:
    depends_on:
      es01:
        condition: service_healthy
-   networks:
-     - defalut
    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
    labels:
      co.elastic.logs/module: kibana
