@@ -455,7 +455,7 @@ volumes:
     driver: local
   certs:
     driver: local
-  esdata:
+  esdata01:
     driver: local
   kibanadata:
     driver: local
