@@ -21,9 +21,6 @@ if __name__ == "__main__":
     
     batch_date= batch_date.strftime("%Y-%m-%d")
     batch_yesterday_date=batch_yesterday_date.strftime("%Y-%m-%d")
-    # test 용
-    batch_date = "2024-12-26"
-    batch_yesterday_date = "2024-12-25"
 
     batch_data_path= f"/opt/airflow/data/ranking_{batch_date}.json" # batch일 데이터 경로
     batch_y_data_path= f"/opt/airflow/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
