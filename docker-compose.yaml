@@ -345,14 +345,14 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-  es01:
+  es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     networks:
       - default
     environment:
-      - node.name=es01
+      - node.name=es
       - discovery.type=single-node
-      - discovery.seed_hosts=es01
+      - discovery.seed_hosts=es
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
       - xpack.security.http.ssl.enabled=false
@@ -365,23 +365,23 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./esdata01:/usr/share/elasticsearch/data
+      - ./esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
 
-  kibana:
+  kibana01:
     image: docker.elastic.co/kibana/kibana:7.17.0
     networks:
       - default
     environment:
       - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_HOSTS=http://es:9200
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=password
     ports:
       - 5601:5601
     depends_on:
-      - es01
+      - es
   
 networks:
   default:
