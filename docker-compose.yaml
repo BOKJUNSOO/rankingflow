@@ -47,7 +47,7 @@
 networks:
   default:
     name: elastic
-    external: true
+    external: false
 
 volumes:
   postgres-db-volume:
@@ -98,7 +98,7 @@ x-airflow-common:
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
   networks:
-    - elastic
+    - default
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -116,7 +116,7 @@ x-spark-common:
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
   networks:
-    - elastic
+    - default
 
 services:
   spark-master:
@@ -170,7 +170,7 @@ services:
       start_period: 5s
     restart: always
     networks:
-      - elastic
+      - default
   
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -186,7 +186,7 @@ services:
       start_period: 30s
     restart: always
     networks:
-      - elastic
+      - default
 
   airflow-webserver:
     <<: *airflow-common
