@@ -83,7 +83,7 @@ x-airflow-common:
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
   networks:
-    - default
+    - elastic
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -101,7 +101,7 @@ x-spark-common:
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
   networks:
-    - default
+    - elastic
 
 services:
   spark-master:
@@ -156,7 +156,7 @@ services:
       start_period: 5s
     restart: always
     networks:
-      - default
+      - elastic
   
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -172,7 +172,7 @@ services:
       start_period: 30s
     restart: always
     networks:
-      - default
+      - elastic
 
   airflow-webserver:
     <<: *airflow-common
@@ -405,6 +405,8 @@ services:
      setup:
        condition: service_healthy
    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+   networks:
+     - elastic
    labels:
      co.elastic.logs/module: elasticsearch
    volumes:
@@ -449,6 +451,8 @@ services:
    depends_on:
      es01:
        condition: service_healthy
+   networks:
+     - elastic
    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
    labels:
      co.elastic.logs/module: kibana
