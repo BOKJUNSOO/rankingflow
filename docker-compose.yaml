@@ -47,7 +47,7 @@
 networks:
   default:
     name: elastic
-    external: false
+    external: true
 
 volumes:
   postgres-db-volume:
@@ -58,7 +58,7 @@ volumes:
     driver: local
   kibanadata:
     driver: local
-    
+
 x-airflow-common:
   &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
@@ -129,7 +129,6 @@ services:
     ports:
       - "7077:7077"
       - "9080:8080"
-    #  - "6066:6066"
 
   spark-worker:
     <<: *spark-common
