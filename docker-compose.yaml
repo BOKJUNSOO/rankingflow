@@ -479,6 +479,8 @@ services:
 
 networks:
   default:
+    name: elastic
+    external: false
 
 volumes:
   postgres-db-volume:
