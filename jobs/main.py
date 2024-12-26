@@ -65,7 +65,7 @@ if __name__ == "__main__":
     class_exp_df.show(10)
 
     # save_data
-    save_to_elastic_search=ElasticSearch("http://es:9200")
+    save_to_elastic_search=ElasticSearch("http://es01:9200")
     save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
     save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
     save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
