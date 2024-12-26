@@ -345,7 +345,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-setup:
+  setup:
    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
    volumes:
      - certs:/usr/share/elasticsearch/config/certs
@@ -400,7 +400,7 @@ setup:
      timeout: 5s
      retries: 120
 
-es01:
+  es01:
    depends_on:
      setup:
        condition: service_healthy
