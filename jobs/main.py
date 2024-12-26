@@ -8,8 +8,8 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
-                        .config("spark.driver.extraClassPath", "/opt/airflow/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
-                        .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-7.15.2.jar") \
+                        .config("spark.driver.extraClassPath", "/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar") \
+                        .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar") \
                         .config("spark.es.nodes","https://es:9200") \
                         .config("spark.es.nodes.wan.only", "true") \
                         .getOrCreate()

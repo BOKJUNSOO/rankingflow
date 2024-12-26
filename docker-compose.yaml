@@ -346,7 +346,7 @@ services:
         condition: service_completed_successfully
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     networks:
       - default
     environment:
@@ -370,7 +370,7 @@ services:
       - 9200:9200
 
   kibana01:
-    image: docker.elastic.co/kibana/kibana:7.17.0
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     networks:
       - default
     environment:
