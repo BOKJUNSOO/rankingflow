@@ -83,7 +83,7 @@ x-airflow-common:
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
   networks:
-    - default-net
+    - default
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -101,7 +101,7 @@ x-spark-common:
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
   networks:
-    - default-net
+    - default
 
 services:
   spark-master:
@@ -156,7 +156,7 @@ services:
       start_period: 5s
     restart: always
     networks:
-      - default-net
+      - default
   
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -172,7 +172,7 @@ services:
       start_period: 30s
     restart: always
     networks:
-      - default-net
+      - default
 
   airflow-webserver:
     <<: *airflow-common
@@ -348,7 +348,7 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
     networks:
-      - default-net
+      - default
     environment:
       - node.name=es01
       - discovery.type=single-node
@@ -372,7 +372,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:8.7.1
     networks:
-      - default-net
+      - default
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=http://es01:9200
@@ -384,7 +384,7 @@ services:
       - es01
   
 networks:
-  default-net:
+  default:
 
 volumes:
   postgres-db-volume:
