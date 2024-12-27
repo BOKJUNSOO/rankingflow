@@ -28,7 +28,7 @@ class MySQL:
         df.write \
           .mode("append")\
           .format("jdbc")\
-          .option("driver","com.mysql.jdbc.Driver")\
+          .option("driver","com.mysql.cj.jdbc.Driver")\
           .option("url",self.url)\
           .option("user",self.user)\
           .option("password",self.password)\
