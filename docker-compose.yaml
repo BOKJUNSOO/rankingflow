@@ -47,7 +47,7 @@
 networks:
   default:
     name: elastic
-    external: true
+    external: false
 
 volumes:
   postgres-db-volume:
