@@ -19,7 +19,7 @@ class ElasticSearch:
           .save()
 
 class MySQL:
-    def __init__(self,url:str,user="bokjunsoo",password="password"):
+    def __init__(self,url:str,user="root",password="password"):
         self.url = url
         self.user = user
         self.password = password
