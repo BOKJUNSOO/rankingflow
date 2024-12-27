@@ -32,6 +32,6 @@ class MySQL:
           .option("url",self.url)\
           .option("user",self.user)\
           .option("password",self.password)\
-          .option("dbtable",db_table_name)
-          
+          .option("dbtable",db_table_name)\
+          .save()
         
