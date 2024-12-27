@@ -376,6 +376,18 @@ services:
       - ELASTICSEARCH_PASSWORD=password
     ports:
       - 5601:5601
+  
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE="mapleranking"
+      - MYSQL_USER="junsoo"
+      - MYSQL_PASSWORD="password"
+      - MYSQL_ROOT_PASSWORD="password"
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
 
 volumes:
   postgres-db-volume:
