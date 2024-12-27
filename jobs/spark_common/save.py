@@ -8,7 +8,7 @@ class ElasticSearch:
         
     def write(self,df,es_resource):
         df.write \
-          .mode("overwrite") \
+          .mode("append") \
           .format("org.elasticsearch.spark.sql") \
           .option("es.nodes",self.host_name) \
           .option("es.port", self.es_port) \
@@ -26,7 +26,7 @@ class MySQL:
     
     def write(self,df:object,db_table_name:str):
         df.write \
-          .mode("overwrite")\
+          .mode("append")\
           .format("jdbc")\
           .option("url",self.url)\
           .option("user",self.user)\
