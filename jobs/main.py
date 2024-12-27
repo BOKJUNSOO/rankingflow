@@ -10,8 +10,6 @@ if __name__ == "__main__":
                         .appName("Spark_Submit") \
                         .config("spark.driver.extraClassPath", "/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar") \
                         .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar") \
-                        .config("spark.es.nodes","https://es:9200") \
-                        .config("spark.es.nodes.wan.only", "true") \
                         .getOrCreate()
                         
     # batch일자의 data와 batch 전날 data를 load
