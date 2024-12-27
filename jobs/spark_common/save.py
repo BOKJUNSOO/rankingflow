@@ -10,6 +10,7 @@ class ElasticSearch:
 
     def write(self,df,es_resource):
         df.write \
+          .mode("overwrite") \
           .format("org.elasticsearch.spark.sql") \
           .option("es.nodes",self.host_name) \
           .option("es.port", self.es_port) \
