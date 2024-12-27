@@ -97,8 +97,6 @@ x-airflow-common:
     - ./data:/opt/airflow/data
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
-  networks:
-    - default
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -115,8 +113,6 @@ x-spark-common:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
-  networks:
-    - default
 
 services:
   spark-master:
@@ -169,8 +165,6 @@ services:
       retries: 5
       start_period: 5s
     restart: always
-    networks:
-      - default
   
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -185,8 +179,6 @@ services:
       retries: 50
       start_period: 30s
     restart: always
-    networks:
-      - default
 
   airflow-webserver:
     <<: *airflow-common
