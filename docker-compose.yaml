@@ -430,7 +430,6 @@ services:
      - node.name=es01
      - cluster.name=${CLUSTER_NAME}
      - discovery.type=single-node
-     - discovery.seed_hosts=es01
      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
      - bootstrap.memory_lock=true
      - xpack.security.enabled=false
