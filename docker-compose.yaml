@@ -459,7 +459,7 @@ services:
      timeout: 10s
      retries: 120
 
-  kibana:
+kibana:
    depends_on:
      es01:
        condition: service_healthy
