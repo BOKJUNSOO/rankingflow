@@ -379,6 +379,8 @@ services:
   
   mysql:
     image: mysql:8.0
+    depends_on:
+      - es
     environment:
       - MYSQL_DATABASE="mapleranking"
       - MYSQL_USER="junsoo"
@@ -387,7 +389,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - mysql-db:/var/lib/mysql
+      - ./mysql-db:/var/lib/mysql
 
 volumes:
   postgres-db-volume:
