@@ -350,38 +350,38 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-es:
-  image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-  depends_on:
-    - airflow-webserver
-  environment:
-    - node.name=es
-    - discovery.type=single-node
-    - discovery.seed_hosts=es
-    - xpack.security.enabled=false
-    - xpack.security.enrollment.enabled=false
-    - xpack.security.http.ssl.enabled=false
-    - xpack.security.transport.ssl.enabled=false
-    - cluster.routing.allocation.disk.threshold_enabled=false
-    - ELASTIC_PASSWORD=password
-  mem_limit: 1073741824
-  ulimits:
-    memlock:
-      soft: -1
-      hard: -1
-  volumes:
-    - ./es-data:/usr/share/es/data
-  ports:
-    - 9200:9200
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+    depends_on:
+      - airflow-webserver
+    environment:
+      - node.name=es
+      - discovery.type=single-node
+      - discovery.seed_hosts=es
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - ELASTIC_PASSWORD=password
+    mem_limit: 1073741824
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es-data:/usr/share/es/data
+    ports:
+      - 9200:9200
 
-kibana:
-  image: docker.elastic.co/kibana/kibana:8.4.3
-  environment:
-    - SERVERNAME=kibana
-    - ELASTICSEARCH_HOSTS=http://es:9200
-    - ELASTICSEARCH_USERNAME=kibana
-    - ELASTICSEARCH_PASSWORD=password
-  ports:
-    - 5601:5601
-  depends_on:
-    - es
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.4.3
+    depends_on:
+      - es
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=http://es:9200
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=password
+    ports:
+      - 5601:5601
