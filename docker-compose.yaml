@@ -357,7 +357,8 @@ services:
         condition: service_completed_successfully
 
   setup:
-   depends_on: airflow-webserver
+   depends_on: 
+     - airflow-webserver
    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
    volumes:
      - certs:/usr/share/elasticsearch/config/certs
