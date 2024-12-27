@@ -67,4 +67,8 @@ if __name__ == "__main__":
     save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
 
     # save_data to MySQL
-    # save_to_mysql_db=MySQL("http")
+    save_to_mysql_db=MySQL("http://mysql:3307")
+    save_to_mysql_db.write(class_status_df,f"class_status_df")
+    save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
+    save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
+    save_to_mysql_db.write(class_exp_df,f"class_exp_df")

@@ -6,8 +6,6 @@ class ElasticSearch:
         self.es_nodes_wan = es_nodes_wan
         self.es_index_auto_create = es_index_auto_create
         
-
-
     def write(self,df,es_resource):
         df.write \
           .mode("overwrite") \
@@ -21,12 +19,12 @@ class ElasticSearch:
           .save()
 
 class MySQL:
-    def __init__(self,url,user="bokjunsoo",password="password"):
+    def __init__(self,url:str,user="bokjunsoo",password="password"):
         self.url = url
         self.user = user
         self.password = password
     
-    def write(self,df,db_table_name):
+    def write(self,df:object,db_table_name:str):
         df.write \
           .mode("overwrite")\
           .format("jdbc")\
