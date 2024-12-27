@@ -46,7 +46,7 @@
 ---
 networks:
   default:
-    name: elastic
+    name: elastic0
     external: false
 
 volumes:
