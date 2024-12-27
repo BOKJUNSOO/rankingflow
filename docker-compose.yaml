@@ -382,11 +382,11 @@ services:
     depends_on:
       - airflow-webserver
     environment:
-      - MYSQL_ROOT_PASSWORD: password
-      - MYSQL_DATABASE: mysql_data_base
-      - MYSQL_USER: bokjunsoo
-      - MYSQL_PASSWORD: password
-      - TZ: Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=mysql_data_base
+      - MYSQL_USER=bokjunsoo
+      - MYSQL_PASSWORD=password
+      - TZ=Asia/Seoul
     volumes:
       - ./mysql-db:/var/lib/mysql
 
