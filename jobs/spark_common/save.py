@@ -19,4 +19,20 @@ class ElasticSearch:
           .option("es.index.auto.create", self.es_index_auto_create) \
           .option("es.resource", es_resource) \
           .save()
+
+class MySQL:
+    def __init__(self,url,user="bokjunsoo",password="password"):
+        self.url = url
+        self.user = user
+        self.password = password
+    
+    def write(self,df,db_table_name):
+        df.write \
+          .mode("overwrite")\
+          .format("jdbc")\
+          .option("url",self.url)\
+          .option("user",self.user)\
+          .option("password",self.password)\
+          .option("dbtable",db_table_name)
+          
         

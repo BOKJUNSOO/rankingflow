@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 from spark_common.base import make_user_dataframe, make_exp_dataframe , make_joined_dataframe
 from spark_common.filter import RankingDataModel
-from spark_common.save import ElasticSearch
+from spark_common.save import ElasticSearch, MySQL
 if __name__ == "__main__":
 
     spark = SparkSession.builder \
@@ -59,9 +59,12 @@ if __name__ == "__main__":
     class_exp_df = class_exp_df.agg_class_exp()
     class_exp_df.show(10)
 
-    # save_data
+    # save_data to elasticSearch
     save_to_elastic_search=ElasticSearch("http://es:9200")
     save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
     save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
     save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
     save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
+
+    # save_data to MySQL
+    # save_to_mysql_db=MySQL("http")
