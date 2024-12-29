@@ -22,18 +22,17 @@ def main():
     exp_data_path= "/opt/airflow/data/maple_exp.csv"
 
     # BATCH일의 USER 테이블 생성
-    basic_refine = spark_common.BasicRefine()
-    user_batch_df=basic_refine.make_user_dataframe(spark,batch_data_path)
+    user_batch_df= spark_common.make_user_dataframe(spark,batch_data_path)
     user_batch_df.show(10)
 
     # BATCH전날의 USER 테이블 생성
-    user_yesterday_df=basic_refine.make_user_dataframe(spark,batch_y_data_path)
+    user_yesterday_df=spark_common.make_user_dataframe(spark,batch_y_data_path)
 
     # Join된 Dataframe 생성성
-    joined_df=basic_refine.make_joined_dataframe(user_batch_df,user_yesterday_df)
+    joined_df=spark_common.make_joined_dataframe(user_batch_df,user_yesterday_df)
 
     # LEVEL 테이블 생성 
-    level_df=basic_refine.make_exp_dataframe(spark,exp_data_path)
+    level_df=spark_common.make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
 
     # // 사용할 데이터 테이블 
