@@ -53,7 +53,10 @@ with DAG(
     #[ delete_data_task ]
     delete_data_ = BashOperator(
         task_id ="delete_data_",
-        bash_command=" echo 'delete data' "
+        env={
+            'TARGET_DATE':'{{ data_interval_start.in_timezone("Asia/Seoull") | ds}}'
+        }
+        bash_command=f'/opt/airflow/plugins/delete_data.sh $TARGET_DATE'
     )
 
     # [ check_data_quality_task ]
