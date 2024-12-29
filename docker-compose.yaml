@@ -342,7 +342,7 @@ services:
         condition: service_completed_successfully
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:{$ELASTIC_SEARCH_VER}
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
     depends_on:
       - airflow-webserver
     environment:
@@ -366,7 +366,7 @@ services:
       - 9200:9200
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:{$ELASTIC_SEARCH_VER}
+    image: docker.elastic.co/kibana/kibana:8.4.3
     depends_on:
       - es
     environment:
@@ -382,8 +382,8 @@ services:
     depends_on:
       - es
     environment:
-      - MYSQL_PASSWORD="password"
-      - MYSQL_ROOT_PASSWORD="password"
+      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
     ports:
       - ${MYSQL_PORT}:3306
     volumes:
