@@ -54,7 +54,7 @@ with DAG(
     delete_data_ = BashOperator(
         task_id ="delete_data_",
         env={
-            'TARGET_DATE':'{{ data_interval_start.in_timezone("Asia/Seoull") | ds}}'
+            'TARGET_DATE':'{{ data_interval_start.in_timezone("Asia/Seoul") | ds}}'
         },
         bash_command=f'/opt/airflow/plugins/delete_data.sh $TARGET_DATE'
     )
