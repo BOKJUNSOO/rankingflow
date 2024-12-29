@@ -100,6 +100,7 @@ sudo docker compose up --build -d
 - `Dashboard`탭에서 데이터 시각화가 가능합니다.
 
 # 4. 디렉토리 구조
+```
 .
 ├── LICENSE
 ├── README.md
@@ -120,7 +121,7 @@ sudo docker compose up --build -d
 |   ├── search_data.sh
 |   └── spark_submit.sh
 └── resources              # Spark connection을 위한 jar파일
-
+```
 # 5. docker-compose 참고자료
 - Airflow : https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html  
 
