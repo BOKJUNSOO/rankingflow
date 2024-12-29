@@ -19,11 +19,10 @@ class ElasticSearch:
           .save()
 
 class MySQL:
-    def __init__(self,dbname:str,url:str="jdbc:mysql://host.docker.internal:3306/",user="root",password="password"):
+    def __init__(self,url:str,user="root",password="password"):
         self.url = url
         self.user = user
         self.password = password
-        self.dbname = dbname
     
     def write(self,df:object,db_table_name:str):
         df.write \
