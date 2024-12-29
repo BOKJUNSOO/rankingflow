@@ -65,6 +65,21 @@ sudo service docker start
 
 ```bash
 sudo docker compose up --build -d
+[+] Running 14/14
+ ✔ Network elastic0                           Created
+ ✔ Container rankingflow-redis-1              Healthy
+ ✔ Container rankingflow-spark-master-1       Started
+ ✔ Container rankingflow-postgres-1           Healthy
+ ✔ Container rankingflow-spark-worker-1       Started
+ ✔ Container rankingflow-jupyterlab-1         Started
+ ✔ Container rankingflow-airflow-init-1       Exited 
+ ✔ Container rankingflow-airflow-triggerer-1  Started
+ ✔ Container rankingflow-airflow-scheduler-1  Started
+ ✔ Container rankingflow-airflow-worker-1     Started
+ ✔ Container rankingflow-airflow-webserver-1  Started
+ ✔ Container rankingflow-es-1                 Started
+ ✔ Container rankingflow-mysql-1              Started
+ ✔ Container rankingflow-kibana-1             Started
 ```
 
 ---
