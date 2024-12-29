@@ -9,6 +9,7 @@ Python으로 작성된 SparkJob을 통해 정제 작업을 수행하고 5가지 
 생성된 데이터 모델은 ElasticSearch와 MySQL에 저장되며 Kibana를 통해 시각화합니다.
 
 > 개발과정은 해당 `velog`에 기록되어 있습니다.
+>
 > https://velog.io/@junsoobok/series/Airflow-with-Spark
 
 # 1. ETL 아키텍쳐
@@ -27,7 +28,7 @@ git clone https://github.com/BOKJUNSOO/rankingflow.git
 
 ## 🐋 도커엔진 다운로드하기
 
-#### 1. 설치전 실행
+#### 설치전 실행
 
 ```bash
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
@@ -48,12 +49,12 @@ echo \
 sudo apt-get update
 ```
 
-#### 2. 도커 패키지 다운로드
+#### 도커 패키지 다운로드
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-#### 3. 도커엔진 실행
+#### 도커엔진 실행
 ```bash
 sudo service docker start
 ```
@@ -98,7 +99,29 @@ sudo docker compose up --build -d
 
 - `Dashboard`탭에서 데이터 시각화가 가능합니다.
 
-# 4. docker-compose 참고자료
+# 4. 디렉토리 구조
+.
+├── LICENSE
+├── README.md
+├── config                # airflow config 파일
+│   └── airflow.cfg     
+├── dags                  # airflow dags 파일
+├── data                  # local 저장 위치
+├── docker-compose.yaml   
+├── dockerfile
+├── jobs                  
+│   ├── spark_common      # pyspark 파일 디렉토리
+│   └── sparktest.py      # spark job 파일
+├── notebooks
+├── plugins               # airflow가 인식할 파일 디렉토리
+│   ├── common            # python Operator용 파일
+│   ├── check_data.sh     # bash Operator용 파일
+|   ├── delete_data.sh
+|   ├── search_data.sh
+|   └── spark_submit.sh
+└── resources              # Spark connection을 위한 jar파일
+
+# 5. docker-compose 참고자료
 - Airflow : https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html  
 
 - Spark : https://hub.docker.com/r/bitnami/spark  
