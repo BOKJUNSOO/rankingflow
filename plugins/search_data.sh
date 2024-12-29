@@ -8,4 +8,4 @@ curl -X GET "localhost:9200/_cat/indices?pretty"
 
 echo
 echo "${index}_${date}저장된 데이터"
-curl -X GET "localhost:9200/${index}_${date}/_search?pretty"
+curl -X GET localhost:9200/${index}_${date}/_search?pretty
