@@ -2,8 +2,6 @@ from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 import spark_common
 import os
-from dotenv import load_dotenv
-load_dotenv()
 def main():
     spark = SparkSession.builder \
                         .master("local") \
