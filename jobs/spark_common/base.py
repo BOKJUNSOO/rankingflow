@@ -52,56 +52,54 @@ def read_spark(spark:object, file_path:str)->object:
                         .load(file_path)
     return spark_df
 
-# 데이터 모델 생성전 기본적인 정제 작업
-class BasicRefine:
-    # maple_exp를 정제하여 `LEVEL` 테이블을 생성하는 함수 
-    @pass_spark_dataframe
-    def make_exp_dataframe(self,spark_df:object)->object:
-        spark_df = spark_df.dropna()
-        spark_df = spark_df.select("level","need_exp")
-        return spark_df
+# maple_exp를 정제하여 `LEVEL` 테이블을 생성하는 함수 
+@pass_spark_dataframe
+def make_exp_dataframe(self,spark_df:object)->object:
+    spark_df = spark_df.dropna()
+    spark_df = spark_df.select("level","need_exp")
+    return spark_df
 
-    # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
-    @pass_spark_dataframe
-    def make_user_dataframe(self,spark_df:object)->object:
-        spark_df = spark_df.select(F.explode("ranking").alias("USER"))
-        spark_df = spark_df.select("USER.character_name",
-                                   "USER.date",
-                                   "USER.class_name",
-                                   "USER.sub_class_name",
-                                   F.col("USER.character_level").cast("integer").alias("character_level"),
-                                   "USER.character_exp",
-                                   F.col("USER.ranking").cast("integer").alias("ranking"))
-        # sub_class와 class_name 중 하나를 사용한다.
-        spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
-        spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
+# RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
+@pass_spark_dataframe
+def make_user_dataframe(self,spark_df:object)->object:
+    spark_df = spark_df.select(F.explode("ranking").alias("USER"))
+    spark_df = spark_df.select("USER.character_name",
+                               "USER.date",
+                               "USER.class_name",
+                               "USER.sub_class_name",
+                               F.col("USER.character_level").cast("integer").alias("character_level"),
+                               "USER.character_exp",
+                               F.col("USER.ranking").cast("integer").alias("ranking"))
+    # sub_class와 class_name 중 하나를 사용한다.
+    spark_df = spark_df.withColumn("class",spark_df["sub_class_name"])
+    spark_df = spark_df.withColumn("class",F.when(spark_df["sub_class_name"]== "", spark_df["class_name"]) \
                                                  .otherwise(spark_df["class"]))
-        spark_df = spark_df.drop("class_name","sub_class_name")
+    spark_df = spark_df.drop("class_name","sub_class_name")
 
-        # 각 유저가 위치한 지역정보 컬럼 추가
-        spark_df = spark_df.withColumn("status",
-                           F.when(spark_df["character_level"]>=290,"Tallahart") \
-                            .when((spark_df["character_level"]<=289)&(spark_df["character_level"]>=285),"Carcion") \
-                            .when((spark_df["character_level"]<=284)&(spark_df["character_level"]>=280),"Arteria") \
-                            .when((spark_df["character_level"]<=279)&(spark_df["character_level"]>=275),"Dowonkyung") \
-                            .when((spark_df["character_level"]<=274)&(spark_df["character_level"]>=270),"Odium") \
-                            .when((spark_df["character_level"]<=269)&(spark_df["character_level"]>=265),"HotelArcs") \
-                            .when((spark_df["character_level"]<=264)&(spark_df["character_level"]>=260),"Cernium") \
-                            .otherwise("AcaneRiver"))
-        return spark_df
+    # 각 유저가 위치한 지역정보 컬럼 추가
+    spark_df = spark_df.withColumn("status",
+                       F.when(spark_df["character_level"]>=290,"Tallahart") \
+                        .when((spark_df["character_level"]<=289)&(spark_df["character_level"]>=285),"Carcion") \
+                        .when((spark_df["character_level"]<=284)&(spark_df["character_level"]>=280),"Arteria") \
+                        .when((spark_df["character_level"]<=279)&(spark_df["character_level"]>=275),"Dowonkyung") \
+                        .when((spark_df["character_level"]<=274)&(spark_df["character_level"]>=270),"Odium") \
+                        .when((spark_df["character_level"]<=269)&(spark_df["character_level"]>=265),"HotelArcs") \
+                        .when((spark_df["character_level"]<=264)&(spark_df["character_level"]>=260),"Cernium") \
+                        .otherwise("AcaneRiver"))
+    return spark_df
 
-    # BATCH 일과 전날에 모두 존재하는 character_name을 기준으로 JOIN하고 정제하는 함수
-    def make_joined_dataframe(self,batch_df:object,yesterday_df:object)->object:
-        joined_df = batch_df.join(yesterday_df,batch_df["character_name"] ==  yesterday_df["character_name"],how ="inner")
-        joined_df = joined_df.select(
-            batch_df["character_name"],
-            batch_df["date"],
-            batch_df["class"],
-            batch_df["character_level"].alias("character_level_today"),
-            yesterday_df["character_level"].alias("character_level_yesterday"),
-            batch_df["character_exp"].alias("character_exp_today"),
-            yesterday_df["character_exp"].alias("character_exp_yesterday"),
-            batch_df["status"].alias("status_today"),
-            yesterday_df["status"].alias("status_yesterday")
-        )
-        return joined_df
+# BATCH 일과 전날에 모두 존재하는 character_name을 기준으로 JOIN하고 정제하는 함수
+def make_joined_dataframe(self,batch_df:object,yesterday_df:object)->object:
+    joined_df = batch_df.join(yesterday_df,batch_df["character_name"] ==  yesterday_df["character_name"],how ="inner")
+    joined_df = joined_df.select(
+        batch_df["character_name"],
+        batch_df["date"],
+        batch_df["class"],
+        batch_df["character_level"].alias("character_level_today"),
+        yesterday_df["character_level"].alias("character_level_yesterday"),
+        batch_df["character_exp"].alias("character_exp_today"),
+        yesterday_df["character_exp"].alias("character_exp_yesterday"),
+        batch_df["status"].alias("status_today"),
+        yesterday_df["status"].alias("status_yesterday")
+    )
+    return joined_df
