@@ -3,6 +3,7 @@ from datetime import datetime , timedelta
 import spark_common
 import os
 from dotenv import load_dotenv
+load_dotenv()
 def main():
     spark = SparkSession.builder \
                         .master("local") \
@@ -65,7 +66,6 @@ def main():
     # save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
 
     # save_data to MySQL
-    load_dotenv()
     MYSQL_URL=os.getenv("MYSQL_URL")
     save_to_mysql_db=spark_common.MySQL(f"{MYSQL_URL}")
     save_to_mysql_db.write(class_status_df,f"class_status_df")
