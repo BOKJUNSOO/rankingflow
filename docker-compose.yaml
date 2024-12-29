@@ -87,7 +87,7 @@ x-airflow-common:
     - ./data:/opt/airflow/data
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
-  user: "${AIRFLOW_UID:-50000}:0"
+  user: "50000:0"
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -112,7 +112,6 @@ services:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-      - MYSQL_URL=${MYSQL_URL}
     ports:
       - "7077:7077"
       - "9080:8080"
@@ -383,10 +382,10 @@ services:
     depends_on:
       - es
     environment:
-      - MYSQL_PASSWORD={$MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD={$MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - ${MYSQL_PORT}:3306
+      - 3306:3306
     volumes:
       - ./mysql-db:/var/lib/mysql
 
