@@ -1,8 +1,8 @@
 import pyspark.sql.functions as F
 from pyspark.sql.window import Window
-class RankingDataModel:
-    def __init__(self,df:object):
-        self.df = df
+from .base import Basefilter
+
+class TableBuilder(Basefilter):
     # USER 테이블로부터 Class_Status 테이블을 만드는 함수
     def agg_class_status(self)->object:
         user_df = self.df

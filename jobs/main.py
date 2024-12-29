@@ -1,10 +1,8 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
-from spark_common.base import make_user_dataframe, make_exp_dataframe , make_joined_dataframe
-from spark_common.filter import RankingDataModel
-from spark_common.save import ElasticSearch, MySQL
-if __name__ == "__main__":
+import spark_common
 
+def main():
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
@@ -24,50 +22,54 @@ if __name__ == "__main__":
     exp_data_path= "/opt/airflow/data/maple_exp.csv"
 
     # BATCH일의 USER 테이블 생성
-    user_batch_df=make_user_dataframe(spark,batch_data_path)
+    basic_refine = spark_common.BasicRefine()
+    user_batch_df=basic_refine.make_user_dataframe(spark,batch_data_path)
     user_batch_df.show(10)
 
     # BATCH전날의 USER 테이블 생성
-    user_yesterday_df=make_user_dataframe(spark,batch_y_data_path)
+    user_yesterday_df=basic_refine.make_user_dataframe(spark,batch_y_data_path)
 
     # Join된 Dataframe 생성성
-    joined_df=make_joined_dataframe(user_batch_df,user_yesterday_df)
+    joined_df=basic_refine.make_joined_dataframe(user_batch_df,user_yesterday_df)
 
     # LEVEL 테이블 생성 
-    level_df=make_exp_dataframe(spark,exp_data_path)
+    level_df=basic_refine.make_exp_dataframe(spark,exp_data_path)
     level_df.show(10)
 
     # // 사용할 데이터 테이블 
     # [ClassStatus table]
-    class_status_df = RankingDataModel(user_batch_df)
+    class_status_df = spark_common.TableBuilder(user_batch_df)
     class_status_df = class_status_df.agg_class_status()
     class_status_df.show(10)
 
     # [AchievementSummary table]
-    achievement_summary_df = RankingDataModel(joined_df)
+    achievement_summary_df = spark_common.TableBuilder(joined_df)
     achievement_summary_df = achievement_summary_df.agg_achive_summary()
     achievement_summary_df.show(10)
                         
     # [UserExp table]
-    user_exp_agg_df = RankingDataModel(joined_df)
+    user_exp_agg_df = spark_common.TableBuilder(joined_df)
     user_exp_agg_df = user_exp_agg_df.agg_user_exp(level_df)
     user_exp_agg_df.show(10)
 
     # [ClassExp table]
-    class_exp_df = RankingDataModel(user_exp_agg_df)
+    class_exp_df = spark_common.TableBuilder(user_exp_agg_df)
     class_exp_df = class_exp_df.agg_class_exp()
     class_exp_df.show(10)
 
     # save_data to elasticSearch
-    save_to_elastic_search=ElasticSearch("http://es:9200")
-    save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
-    save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
-    save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
-    save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
+    # save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
+    # save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
+    # save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
+    # save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
+    # save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
 
     # save_data to MySQL
-    save_to_mysql_db=MySQL("jdbc:mysql://172.21.80.1:3307/rankinginfo")
-    save_to_mysql_db.write(class_status_df,f"class_status_df")
-    save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
-    save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
-    save_to_mysql_db.write(class_exp_df,f"class_exp_df")
+    # save_to_mysql_db=spark_common.MySQL("jdbc:mysql://172.21.80.1:3307/rankinginfo")
+    # save_to_mysql_db.write(class_status_df,f"class_status_df")
+    # save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
+    # save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
+    # save_to_mysql_db.write(class_exp_df,f"class_exp_df")
+
+if __name__ == "__main__":
+    main()
