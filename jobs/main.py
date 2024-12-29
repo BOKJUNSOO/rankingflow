@@ -1,7 +1,8 @@
 from pyspark.sql import SparkSession
 from datetime import datetime , timedelta
 import spark_common
-
+import os
+from dotenv import load_dotenv
 def main():
     spark = SparkSession.builder \
                         .master("local") \
@@ -64,7 +65,9 @@ def main():
     # save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
 
     # save_data to MySQL
-    save_to_mysql_db=spark_common.MySQL("jdbc:mysql://host.docker.internal:3307/rankinginfo")
+    load_dotenv()
+    MYSQL_URL=os.getenv("MYSQL_URL")
+    save_to_mysql_db=spark_common.MySQL(f"{MYSQL_URL}")
     save_to_mysql_db.write(class_status_df,f"class_status_df")
     save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
     save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
