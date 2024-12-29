@@ -54,14 +54,14 @@ def read_spark(spark:object, file_path:str)->object:
 
 # maple_exp를 정제하여 `LEVEL` 테이블을 생성하는 함수 
 @pass_spark_dataframe
-def make_exp_dataframe(self,spark_df:object)->object:
+def make_exp_dataframe(spark_df:object)->object:
     spark_df = spark_df.dropna()
     spark_df = spark_df.select("level","need_exp")
     return spark_df
 
 # RAWDATA를 정제하여 `USER` 테이블을 생성하는 함수
 @pass_spark_dataframe
-def make_user_dataframe(self,spark_df:object)->object:
+def make_user_dataframe(spark_df:object)->object:
     spark_df = spark_df.select(F.explode("ranking").alias("USER"))
     spark_df = spark_df.select("USER.character_name",
                                "USER.date",
@@ -89,7 +89,7 @@ def make_user_dataframe(self,spark_df:object)->object:
     return spark_df
 
 # BATCH 일과 전날에 모두 존재하는 character_name을 기준으로 JOIN하고 정제하는 함수
-def make_joined_dataframe(self,batch_df:object,yesterday_df:object)->object:
+def make_joined_dataframe(batch_df:object,yesterday_df:object)->object:
     joined_df = batch_df.join(yesterday_df,batch_df["character_name"] ==  yesterday_df["character_name"],how ="inner")
     joined_df = joined_df.select(
         batch_df["character_name"],
