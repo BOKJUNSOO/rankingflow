@@ -84,7 +84,7 @@ x-airflow-common:
     - ./plugins:/opt/airflow/plugins
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
-    - ./data:/opt/airflow/data
+    - ./data:/opt/bitnami/spark/data
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
   user: "50000:0"
