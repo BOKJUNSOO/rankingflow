@@ -14,4 +14,3 @@ spark-submit \
     --master spark://spark-master:7077 ${script} \
     --conf spark.driver.memory=${DRIVER_MEMORY} \
     --conf spark.executor.memory=${EXECUTOR_MEMORY} \
-    --conf spark.eventLog.enabled=true
