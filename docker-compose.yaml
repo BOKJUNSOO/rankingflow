@@ -129,6 +129,8 @@ services:
       - SPARK_WORKER_WEBUI_PORT=8081
     depends_on:
       - spark-master
+    ports:
+      - "9081:8081"
 
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
