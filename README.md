@@ -1,15 +1,15 @@
 
 # 👋 rankingflow
-`Airflow`를 이용해 자동화된 데이터 파이프라인을 구축하는 프로젝트입니다.
+`Airflow`를 이용해 자동화된 `데이터 파이프라인`을 구축하는 프로젝트입니다.
 
-Nexon Open API를 통해 제공된 데이터를 활용하여 개인 랭킹 데이터를 수집합니다.
+ETL과정은 다음과 같습니다 !
+- `Nexon Open API`의 개인 랭킹 데이터 소스를 수집하여 로컬디렉터리에 저장합니다.
+- `Python`으로 작성된 `SparkJob`을 통해 데이터를 처리 및 정제 하고 이 과정을 통해 데이터 테이블을 생성합니다.
+- 생성된 데이터 테이블을 `MySQL`과 `ElasticSearch`에 저장합니다.
+- `Kibana`를 이용해 저장된 데이터를 시각화 합니다.
+- 처리가 완료된 로컬디렉터리의 데이터를 삭제합니다.
 
-Python으로 작성된 SparkJob을 통해 정제 작업을 수행하고 5가지 데이터 모델을 생성합니다.
-
-생성된 데이터 모델은 ElasticSearch와 MySQL에 저장되며 Kibana를 통해 시각화합니다.
-
-> 개발과정은 해당 `velog`에 기록되어 있습니다.
->
+`rankingflow`의 개발과정은 아래의 `velog`에 기록되어 있습니다.⬇️
 > https://velog.io/@junsoobok/series/Airflow-with-Spark
 
 # 1. ETL 아키텍쳐
@@ -65,6 +65,21 @@ sudo service docker start
 
 ```bash
 sudo docker compose up --build -d
+[+] Running 14/14
+ ✔ Network elastic0                           Created
+ ✔ Container rankingflow-redis-1              Healthy
+ ✔ Container rankingflow-spark-master-1       Started
+ ✔ Container rankingflow-postgres-1           Healthy
+ ✔ Container rankingflow-spark-worker-1       Started
+ ✔ Container rankingflow-jupyterlab-1         Started
+ ✔ Container rankingflow-airflow-init-1       Exited 
+ ✔ Container rankingflow-airflow-triggerer-1  Started
+ ✔ Container rankingflow-airflow-scheduler-1  Started
+ ✔ Container rankingflow-airflow-worker-1     Started
+ ✔ Container rankingflow-airflow-webserver-1  Started
+ ✔ Container rankingflow-es-1                 Started
+ ✔ Container rankingflow-mysql-1              Started
+ ✔ Container rankingflow-kibana-1             Started
 ```
 
 ---
