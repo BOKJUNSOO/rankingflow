@@ -137,10 +137,14 @@ services:
   spark-history:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    volumes:
+      - ./spark-events:/tmp/spark-events
     environment:
-      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/spark-events
+      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/tmp/spark-events
     ports:
       - "18080:18080"
+    depends_on:
+      - spark-master
 
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
