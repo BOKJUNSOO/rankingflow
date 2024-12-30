@@ -6,7 +6,6 @@ def main():
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
-                        .config("spark.eventLog.enabled","true") \
                         .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar") \
                         .config("spark.driver.memory","2g")\
                         .config("spark.executor.memory","4g")\
