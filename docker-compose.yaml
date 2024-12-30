@@ -134,6 +134,14 @@ services:
     ports:
       - "9081:8081"
 
+  spark-history:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    environment:
+      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/spark-events
+    ports:
+      - "18080:18080"
+
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
     ports:
