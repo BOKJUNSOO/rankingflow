@@ -1,7 +1,7 @@
 # [Airflow의 PythonOperator에 전달할 공통함수]
 
 # 데이터가 디렉토리에 존재하는가 여부를 분기처리 하는 함수
-def check_dir(day:str,root_dir:str="/opt/airflow/data",**kwargs)->str:
+def check_dir(day:str,root_dir:str="/opt/bitnami/spark/data",**kwargs)->str:
     from dateutil.relativedelta import relativedelta
     from glob import glob
 
