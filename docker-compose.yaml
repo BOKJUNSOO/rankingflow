@@ -103,6 +103,10 @@ x-spark-common:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
+  deploy:
+    resources:
+      limits:
+        memory: 4g
 
 services:
   spark-master:
