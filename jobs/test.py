@@ -10,7 +10,9 @@ def main():
                         .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar") \
                         .config("spark.driver.memory","2g")\
                         .config("spark.executor.memory","4g")\
-                        .config("spark.eventLog.enabled","true") \
+                        .config("spark.eventLog.dir","/opt/spark-events")\
+                        .config("spark.history.fs.logDirectory","/opt/spark-events")\
+                        .config("spark.eventLog.enabled","true")\
                         .getOrCreate()
 
     # batch일자의 data와 batch 전날 data를 load
