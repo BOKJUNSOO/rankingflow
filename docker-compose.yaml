@@ -119,6 +119,7 @@ services:
     ports:
       - "7077:7077"
       - "9080:8080"
+      - "4444:4040"
 
   spark-worker:
     <<: *spark-common
