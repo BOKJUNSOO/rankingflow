@@ -19,9 +19,14 @@ def main():
     batch_date= batch_date.strftime("%Y-%m-%d")
     batch_yesterday_date=batch_yesterday_date.strftime("%Y-%m-%d")
 
-    batch_data_path= f"/opt/bitnami/spark/data/ranking_{batch_date}.json" # batch일 데이터 경로
-    batch_y_data_path= f"/opt/bitnami/spark/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
-    exp_data_path= "/opt/bitnami/spark/data/maple_exp.csv"
+    try:
+        batch_data_path= f"/opt/bitnami/spark/data/ranking_{batch_date}.json" # batch일 데이터 경로
+        batch_y_data_path= f"/opt/bitnami/spark/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
+        exp_data_path= "/opt/bitnami/spark/data/maple_exp.csv"
+    except:
+        batch_data_path= f"/opt/bitnami/airflow/data/ranking_{batch_date}.json" # batch일 데이터 경로
+        batch_y_data_path= f"/opt/bitnami/airflow/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
+        exp_data_path= "/opt/bitnami/airflow/data/maple_exp.csv"
 
     # BATCH일의 USER 테이블 생성
     user_batch_df= spark_common.make_user_dataframe(spark,batch_data_path)
