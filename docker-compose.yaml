@@ -132,16 +132,6 @@ services:
       - spark-master
     ports:
       - "9081:8081"
-  
-  spark-history:
-    <<: *spark-common
-    command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
-    depends_on:
-      - spark-master
-    ports:
-      - "18080:18080"
-    
-
 
   jupyterlab:
     image: jupyter/pyspark-notebook:latest

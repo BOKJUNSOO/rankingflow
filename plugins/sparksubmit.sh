@@ -13,6 +13,5 @@ spark-submit \
     --jars /opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar \
     --master spark://spark-master:7077 ${script} \
     --conf spark.driver.memory=${DRIVER_MEMORY} \
-    --conf spark.eventLog.enabled=true\
-    --conf spark.eventLog.dir=file:/opt/bitnami/spark/data/history \
-    --conf spark.executor.memort=${EXECUTOR_MEMORY}
+    --conf spark.executor.memory=${EXECUTOR_MEMORY} \
+    --conf spark.eventLog.enabled=true
