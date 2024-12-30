@@ -7,12 +7,9 @@ def main():
     spark = SparkSession.builder \
                         .master("local") \
                         .appName("Spark_Submit") \
-                        .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar") \
-                        .config("spark.driver.memory","2g")\
-                        .config("spark.executor.memory","4g")\
+                        .config("spark.eventLog.enabled","true")\
                         .config("spark.eventLog.dir","/opt/spark-events")\
                         .config("spark.history.fs.logDirectory","/opt/spark-events")\
-                        .config("spark.eventLog.enabled","true")\
                         .getOrCreate()
 
     # batch일자의 data와 batch 전날 data를 load
@@ -61,21 +58,6 @@ def main():
     class_exp_df = spark_common.TableBuilder(user_exp_agg_df)
     class_exp_df = class_exp_df.agg_class_exp()
     class_exp_df.show(10)
-
-    # save_data to elasticSearch
-    save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
-    save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
-    save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
-    save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
-    save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
-    
-    # save_data to MySQL
-    schema_name="rankinginfo"
-    save_to_mysql_db=spark_common.MySQL(url=f"jdbc:mysql://host.docker.internal:3306/{schema_name}")
-    save_to_mysql_db.write(class_status_df,f"class_status_df")
-    save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
-    save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
-    save_to_mysql_db.write(class_exp_df,f"class_exp_df")
 
 if __name__ == "__main__":
     main()
