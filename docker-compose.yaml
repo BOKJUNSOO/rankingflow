@@ -119,7 +119,6 @@ services:
     ports:
       - "7077:7077"
       - "9080:8080"
-      - "4444:4040"
 
   spark-worker:
     <<: *spark-common
@@ -132,6 +131,17 @@ services:
       - spark-master
     ports:
       - "9081:8081"
+  
+  spark-history:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    environment:
+      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/bitnami/spark/data/history
+      - SPARK_HISTORY_OPT=-Dspark.history.ui.port=18080
+    ports:
+      - "18080:18080"
+    
+
 
   jupyterlab:
     image: jupyter/pyspark-notebook:latest
