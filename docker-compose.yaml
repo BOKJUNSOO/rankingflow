@@ -135,7 +135,7 @@ services:
   
   spark-history:
     <<: *spark-common
-    command: /usr/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
     environment:
       - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/bitnami/spark/data/history
       - SPARK_HISTORY_OPTS=-Dspark.history.ui.port=18080
