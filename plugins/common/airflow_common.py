@@ -86,7 +86,7 @@ def get_data(api_key,day:str,**kwargs):
     print("ranking_data 호출이 끝났습니다.")
     
     # 호출된 데이터 객체를 data 디렉토리에 저장
-    file_path = f"/opt/bitnami/spark/data/{target_date}.json"
+    file_path = f"/opt/bitnami/spark/data/ranking_{target_date}.json"
     with open (file_path, "w", encoding = "UTF-8-SIG") as f:
         json.dump(mydata,f,ensure_ascii=False,indent='\t')
         print("done")
