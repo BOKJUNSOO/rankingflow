@@ -405,7 +405,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - ./mysql-db:/var/lib/mysql
 
