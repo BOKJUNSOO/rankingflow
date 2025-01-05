@@ -67,7 +67,7 @@ def main():
     
     # save_data to MySQL
     schema_name="rankinginfo"
-    save_to_mysql_db=spark_common.MySQL(url=f"jdbc:mysql://host.docker.internal:3306/{schema_name}")
+    save_to_mysql_db=spark_common.MySQL(url=f"jdbc:mysql://host.docker.internal:3307/{schema_name}")
     save_to_mysql_db.write(class_status_df,f"class_status_df")
     save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
     save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
