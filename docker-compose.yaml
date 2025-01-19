@@ -122,7 +122,7 @@ services:
       - "9080:8080"
       - "4444:4040"
 
-  spark-worker:
+  spark-worker-1:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
@@ -133,6 +133,18 @@ services:
       - spark-master
     ports:
       - "9081:8081"
+
+  spark-worker-2:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=8081
+    depends_on:
+      - spark-master
+    ports:
+      - "9082:8081"
 
   spark-history:
     <<: *spark-common
