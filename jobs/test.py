@@ -5,11 +5,12 @@ import spark_common
 # spark job ui 확인을 위한 python file
 def main():
     spark = SparkSession.builder \
-                        .master("local") \
+                        .master("spark://spark-master:7077") \
                         .appName("Spark_Submit") \
                         .config("spark.eventLog.enabled","true")\
                         .config("spark.eventLog.dir","/opt/spark-events")\
                         .config("spark.history.fs.logDirectory","/opt/spark-events")\
+                        .config("spark.executor.cores","2")\
                         .getOrCreate()
 
     # batch일자의 data와 batch 전날 data를 load
