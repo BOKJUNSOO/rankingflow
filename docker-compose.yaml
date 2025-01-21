@@ -99,7 +99,7 @@ x-airflow-common:
 
 x-spark-common:
   &spark-common
-  image: bitnami/spark:latest
+  image: bitnami/spark:3.1.2
   volumes:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
