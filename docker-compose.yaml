@@ -154,6 +154,20 @@ services:
     ports:
       - "9082:8081"
 
+  spark-worker-3:
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=8081
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    depends_on:
+      - spark-master
+    ports:
+      - "9083:8081"
+
   spark-history:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
