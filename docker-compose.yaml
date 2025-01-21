@@ -157,7 +157,7 @@ services:
     volumes:
       - ./spark-events:/opt/bitnami/spark/spark-events
     environment:
-      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/bitnami/spark/spark-events
+      - SPARK_HISTORY_FS_LOGDIRECTORY=/opt/bitnami/spark/spark-events
     ports:
       - "18080:18080"
     depends_on:
