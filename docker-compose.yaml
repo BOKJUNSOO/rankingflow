@@ -119,8 +119,6 @@ services:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-    expose:
-      - "7077"
     ports:
       - "7077:7077"
       - "9080:8080"
