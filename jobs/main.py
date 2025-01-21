@@ -4,11 +4,11 @@ import spark_common
 
 def main():
     spark = SparkSession.builder \
-                        .master("local") \
+                        .master("spark://spark-master:7077") \
                         .appName("Spark_Submit") \
                         .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar") \
-                        .config("spark.driver.memory","2g")\
-                        .config("spark.executor.memory","4g")\
+                        .config("spark.eventLog.dir","/opt/bitnami/spark/spark-events")\
+                        .config("spark.history.fs.logDirectory","/opt/bitnami/spark/spark-events")\
                         .getOrCreate()
 
     # batch일자의 data와 batch 전날 data를 load
