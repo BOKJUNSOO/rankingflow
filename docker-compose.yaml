@@ -114,6 +114,7 @@ services:
   spark-master:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.master.Master
+    hostname: spark-master
     environment:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
