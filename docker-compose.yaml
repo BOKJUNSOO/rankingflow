@@ -85,6 +85,7 @@ x-airflow-common:
     - ./config/airflow.cfg:/opt/airflow/airflow.cfg
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ./data:/opt/bitnami/spark/data
+    - ./spark-events:/opt/bitnami/spark/spark-events
     - ./jobs:/opt/airflow/jobs
     - ./resources:/opt/airflow/resources
   user: "50000:0"
@@ -154,9 +155,9 @@ services:
     <<: *spark-common
     command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
     volumes:
-      - ./spark-events:/tmp/spark-events
+      - ./spark-events:/opt/bitnami/spark/spark-events
     environment:
-      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/tmp/spark-events
+      - SPARK_HISTORY_FS_LOGDIRECTORY=file:/opt/bitnami/spark/spark-events
     ports:
       - "18080:18080"
     depends_on:

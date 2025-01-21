@@ -17,8 +17,8 @@ def main():
                         .master("spark://spark-master:7077") \
                         .appName("Spark_Submit") \
                         .config("spark.eventLog.enabled","true")\
-                        .config("spark.eventLog.dir","/opt/spark-events")\
-                        .config("spark.history.fs.logDirectory","/opt/spark-events")\
+                        .config("spark.eventLog.dir","/opt/bitnami/spark/spark-events")\
+                        .config("spark.history.fs.logDirectory","/opt/bitnami/spark/spark-events")\
                         .config("spark.executor.cores","2")\
                         .getOrCreate()
     
