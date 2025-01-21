@@ -104,7 +104,7 @@ x-spark-common:
     - ./jobs:/opt/bitnami/spark/jobs
     - ./data:/opt/bitnami/spark/data
     - ./resources:/opt/bitnami/spark/resources
-    - ./spark-events:/opt/spark-events
+    - ./spark-events:/opt/bitnami/spark/spark-events
   deploy:
     resources:
       limits:
