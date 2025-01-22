@@ -13,10 +13,10 @@ ETL과정은 다음과 같습니다 !
 > https://velog.io/@junsoobok/series/Airflow-with-Spark
 
 # 1. ETL 아키텍쳐
-<img src="./README_IMG/ETL_아키텍쳐.png" alt="아키텍쳐 다이어그램" width="200%"/>
+<img src="./README_IMG/ETL_아키텍쳐.PNG" alt="아키텍쳐 다이어그램" width="200%"/>
 
 # 2. DataMart
-<img src="./README_IMG/DATA_MODELING.png" alt="데이터마트">
+<img src="./README_IMG/DATA_MODELING.PNG" alt="데이터마트">
 
 # 3. Trouble Shooting
 
@@ -24,7 +24,7 @@ ETL과정은 다음과 같습니다 !
 
 - 보안 이슈
 
-<img src="./README_IMG/Airflow_key.png" alt="airflow1">
+<img src="./README_IMG/Airflow_key.PNG" alt="airflow1">
 
 - API 호출량 조절
 
@@ -34,11 +34,11 @@ ETL과정은 다음과 같습니다 !
 
 - Pythonic
 
-<img src="./README_IMG/directory.png" alt="spark1">
+<img src="./README_IMG/directory.PNG" alt="spark1">
 
 - OutOfMemory
 
-<img src="./README_IMG/outofmemory.png" alt="spark2">
+<img src="./README_IMG/outofmemory.PNG" alt="spark2">
 
 
 # 4. 프로젝트 시작하기
@@ -139,7 +139,7 @@ sudo docker compose up --build -d
 
 - `Airflow` 모니터링
 
-<img src="./README_IMG/Airflow_moniter.png" alt="Airflow 페이지">
+<img src="./README_IMG/Airflow_moniter.PNG" alt="Airflow 페이지">
 
 - 
 
