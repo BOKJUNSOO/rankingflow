@@ -131,11 +131,9 @@ sudo docker compose up --build -d
 ~/rankingflow/plugins$ ./search_data.sh ${date}
 ```
 - `localhost:5601`로 접속합니다.
-<img src="./README_IMG/kibana.png" alt="kibana 페이지">
-
 - `Discover`탭에서 `Create a data view`를 생성합니다.
-
 - `Dashboard`탭에서 데이터 시각화가 가능합니다.
+<img src="./README_IMG/kibana.png" alt="kibana 페이지">
 
 - `Airflow` 모니터링
 
