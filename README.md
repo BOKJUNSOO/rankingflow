@@ -139,7 +139,6 @@ sudo docker compose up --build -d
 
 <img src="./README_IMG/Airflow_moniter.PNG" alt="Airflow 페이지">
 
-- 
 
 # 5. 디렉토리 구조
 ```
