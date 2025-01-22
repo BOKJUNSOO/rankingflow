@@ -28,7 +28,7 @@ ETL과정은 다음과 같습니다 !
 
 - API 호출량 조절
 
-<img src="./README_IMG/API.png" alt="airflow2">
+<img src="./README_IMG/API.PNG" alt="airflow2">
 
 ## Spark
 
