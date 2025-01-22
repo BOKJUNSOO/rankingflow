@@ -13,12 +13,35 @@ ETL과정은 다음과 같습니다 !
 > https://velog.io/@junsoobok/series/Airflow-with-Spark
 
 # 1. ETL 아키텍쳐
-<img src="./README_IMG/ETL아키텍쳐.jpg" alt="아키텍쳐 다이어그램" width="200%"/>
+<img src="./README_IMG/ETL_아키텍쳐.png" alt="아키텍쳐 다이어그램" width="200%"/>
 
 # 2. DataMart
-<img src="./README_IMG/datamart.jpg" alt="데이터마트">
+<img src="./README_IMG/DATA_MODELING.png" alt="데이터마트">
 
-# 3. 프로젝트 시작하기
+# 3. Trouble Shooting
+
+## Airflow
+
+- 보안 이슈
+
+<img src="./README_IMG/Airflow_key.png" alt="airflow1">
+
+- API 호출량 조절
+
+<img src="./README_IMG/API.png" alt="airflow2">
+
+## Spark
+
+- Pythonic
+
+<img src="./README_IMG/directory.png" alt="spark1">
+
+- OutOfMemory
+
+<img src="./README_IMG/outofmemory.png" alt="spark2">
+
+
+# 4. 프로젝트 시작하기
 ## 📥 프로젝트 클론하기
 ```bash
 git clone https://github.com/BOKJUNSOO/rankingflow.git
@@ -28,7 +51,7 @@ git clone https://github.com/BOKJUNSOO/rankingflow.git
 
 ## 🐋 도커엔진 다운로드하기
 
-#### 설치전 실행
+- 설치전 실행
 
 ```bash
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
@@ -49,12 +72,12 @@ echo \
 sudo apt-get update
 ```
 
-#### 도커 패키지 다운로드
+- 도커 패키지 다운로드
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-#### 도커엔진 실행
+- 도커엔진 실행
 ```bash
 sudo service docker start
 ```
@@ -85,11 +108,11 @@ sudo docker compose up --build -d
 ---
 
 ## 🗝️ Nexon Api Key 발급받고 입력하기
-### 사이트에 접속해서 API키를 발급받아주세요.
+- 사이트에 접속해서 API키를 발급받아주세요.
 > 메이플스토리 > 랭킹정보조회 > 종합 랭킹 정보 조회
 > https://openapi.nexon.com/ko/
 
-### localhost:8081로 접속합니다.
+- localhost:8081로 접속합니다.
 
 - 상단의 Admin > Variables로 들어갑니다.
 <img src="./README_IMG/airflowkey1.png" alt="key등록1">
@@ -114,7 +137,13 @@ sudo docker compose up --build -d
 
 - `Dashboard`탭에서 데이터 시각화가 가능합니다.
 
-# 4. 디렉토리 구조
+- `Airflow` 모니터링
+
+<img src="./README_IMG/Airflow_moniter.png" alt="Airflow 페이지">
+
+- 
+
+# 5. 디렉토리 구조
 ```
 .
 ├── LICENSE
@@ -137,7 +166,7 @@ sudo docker compose up --build -d
 |   └── spark_submit.sh
 └── resources              # Spark connection을 위한 jar파일
 ```
-# 5. docker-compose 참고자료
+# 6. docker-compose 참고자료
 - Airflow : https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html  
 
 - Spark : https://hub.docker.com/r/bitnami/spark  
