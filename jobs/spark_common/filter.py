@@ -68,5 +68,5 @@ class TableBuilder(Basefilter):
         )
         # class별 획득 경험치의 합에따른 순위 설정
         hunt_rank = Window.partitionBy("status").orderBy(F.desc("exp_gained_sum"))
-        class_exp_agg = class_exp_agg.withColumn("hunking_rank",F.rank().over(hunt_rank))
+        class_exp_agg = class_exp_agg.withColumn("hunting_rank",F.rank().over(hunt_rank))
         return class_exp_agg

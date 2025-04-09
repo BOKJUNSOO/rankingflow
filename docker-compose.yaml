@@ -126,47 +126,47 @@ services:
       - "9080:8080"
       - "4444:4040"
 
-  spark-worker-1:
-    <<: *spark-common
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_WORKER_MEMORY=2G
-      - SPARK_WORKER_CORES=2
-    depends_on:
-      - spark-master
-    ports:
-      - "9081:8081"
+  # spark-worker-1:
+  #   <<: *spark-common
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+  #   environment:
+  #     - SPARK_MODE=worker
+  #     - SPARK_MASTER_URL=spark://spark-master:7077
+  #     - SPARK_WORKER_WEBUI_PORT=8081
+  #     - SPARK_WORKER_MEMORY=2G
+  #     - SPARK_WORKER_CORES=2
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "9081:8081"
 
-  spark-worker-2:
-    <<: *spark-common
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_WORKER_MEMORY=2G
-      - SPARK_WORKER_CORES=2
-    depends_on:
-      - spark-master
-    ports:
-      - "9082:8081"
+  # spark-worker-2:
+  #   <<: *spark-common
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+  #   environment:
+  #     - SPARK_MODE=worker
+  #     - SPARK_MASTER_URL=spark://spark-master:7077
+  #     - SPARK_WORKER_WEBUI_PORT=8081
+  #     - SPARK_WORKER_MEMORY=2G
+  #     - SPARK_WORKER_CORES=2
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "9082:8081"
 
-  spark-worker-3:
-    <<: *spark-common
-    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_WORKER_MEMORY=2G
-      - SPARK_WORKER_CORES=2
-    depends_on:
-      - spark-master
-    ports:
-      - "9083:8081"
+  # spark-worker-3:
+  #   <<: *spark-common
+  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+  #   environment:
+  #     - SPARK_MODE=worker
+  #     - SPARK_MASTER_URL=spark://spark-master:7077
+  #     - SPARK_WORKER_WEBUI_PORT=8081
+  #     - SPARK_WORKER_MEMORY=2G
+  #     - SPARK_WORKER_CORES=2
+  #   depends_on:
+  #     - spark-master
+  #   ports:
+  #     - "9083:8081"
 
   spark-history:
     <<: *spark-common
@@ -395,45 +395,8 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-    environment:
-      - node.name=es
-      - discovery.type=single-node
-      - discovery.seed_hosts=es
-      - xpack.security.enabled=false
-      - xpack.security.enrollment.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - cluster.routing.allocation.disk.threshold_enabled=false
-      - ELASTIC_PASSWORD=password
-    mem_limit: 1073741824
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    restart: unless-stopped
-    volumes:
-      - ./es-data:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.4.3
-    depends_on:
-      - es
-    environment:
-      - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=http://es:9200
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=password
-    ports:
-      - 5601:5601
-  
   mysql:
     image: mysql:8.0
-    depends_on:
-      - es
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
