@@ -63,7 +63,7 @@ def main():
     class_exp_df.show(10)
 
     # save_data to elasticSearch
-    save_to_elastic_search=spark_common.ElasticSearch("http://localhost:9200")
+    save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
     save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
     save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
     save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
