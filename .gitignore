@@ -6,3 +6,6 @@ notebooks/hellospark.ipynb
 esdata01/
 kibanadata/
 certs/
+es-data/
+spark-events/
+mysql-db/
