@@ -449,6 +449,7 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
+
   es01:
     depends_on:
       setup:
