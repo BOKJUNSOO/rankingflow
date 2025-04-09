@@ -59,19 +59,19 @@ def main():
     class_exp_df.show(10)
 
     # save_data to elasticSearch
-    #save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
-    #save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
-    #save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
-    #save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
-    #save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
+    save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
+    save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
+    save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
+    save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
+    save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
     #
     ## save_data to MySQL
-    #schema_name="rankinginfo"
-    #save_to_mysql_db=spark_common.MySQL(url=f"jdbc:mysql://host.docker.internal:3307/{schema_name}")
-    #save_to_mysql_db.write(class_status_df,f"class_status_df")
-    #save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
-    #save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
-    #save_to_mysql_db.write(class_exp_df,f"class_exp_df")
+    schema_name="rankinginfo"
+    save_to_mysql_db=spark_common.MySQL(url=f"jdbc:mysql://host.docker.internal:3307/{schema_name}")
+    save_to_mysql_db.write(class_status_df,f"class_status_df")
+    save_to_mysql_db.write(achievement_summary_df,f"achievement_summary_df")
+    save_to_mysql_db.write(user_exp_agg_df,f"user_exp_agg_df")
+    save_to_mysql_db.write(class_exp_df,f"class_exp_df")
 
 if __name__ == "__main__":
     main()
