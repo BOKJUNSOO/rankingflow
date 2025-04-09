@@ -415,10 +415,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    restart:
-      - unless-stopped
-    cap_add:
-      - IPC_LOCK
+    restart: unless-stopped
     sysctls:
       - vm.max_map_count=262144
     volumes:
