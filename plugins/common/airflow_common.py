@@ -69,6 +69,8 @@ def get_data(api_key,day:str,**kwargs):
     # 1페이지당 200명의 랭킹정보
     for i in range(1,300):
         url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
+        if i % 20 == 0:
+            print(f"{i}/300 페이지 호출중입니다.")
         for retry in range(3):
             try:
                 req = requests.get(url,headers=headers)
