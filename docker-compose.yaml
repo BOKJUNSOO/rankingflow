@@ -414,8 +414,6 @@ services:
         soft: -1
         hard: -1
     restart: unless-stopped
-    sysctls:
-      - vm.max_map_count=262144
     volumes:
       - ./es-data:/usr/share/elasticsearch/data
     ports:
