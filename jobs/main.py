@@ -4,7 +4,7 @@ import spark_common
 
 def main():
     spark = SparkSession.builder \
-                        .master("spark://spark-master:7077") \
+                        .master("local") \
                         .appName("Spark_Submit") \
                         .config("spark.jars","/opt/airflow/resources/elasticsearch-spark-30_2.12-8.11.1.jar,/opt/airflow/resources/mysql-connector-j-8.0.33.jar") \
                         .config("spark.eventLog.dir","/opt/bitnami/spark/spark-events")\
