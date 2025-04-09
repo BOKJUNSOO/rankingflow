@@ -495,8 +495,6 @@ services:
   
   mysql:
     image: mysql:8.0
-    depends_on:
-      - es
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
