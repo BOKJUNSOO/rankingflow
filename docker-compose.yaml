@@ -408,12 +408,19 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
       - cluster.routing.allocation.disk.threshold_enabled=false
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - ELASTIC_PASSWORD=password
     mem_limit: 1073741824
     ulimits:
       memlock:
         soft: -1
         hard: -1
+    restart:
+      - unless-stopped
+    cap_add:
+      - IPC_LOCK
+    sysctls:
+      - vm.max_map_count=262144
     volumes:
       - ./es-data:/usr/share/elasticsearch/data
     ports:
