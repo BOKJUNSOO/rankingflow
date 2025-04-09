@@ -68,20 +68,25 @@ def get_data(api_key,day:str,**kwargs):
 
     # 1페이지당 200명의 랭킹정보
     for i in range(1,300):
-        if i % 50 == 0:
-            time.sleep(15)
-        if i % 20 == 0:
-            print(f"{i}번째 페이지를 호출중입니다.")
-            time.sleep(15)
-            url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
-            req = requests.get(url = url, headers = headers)
-            data = req.json()
-            mydata.append(data)
-        else:
-            url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
-            req = requests.get(url = url, headers = headers)
-            data = req.json()
-            mydata.append(data)
+        url = f"https://open.api.nexon.com/maplestory/v1/ranking/overall?date={target_date}&world_name=%EC%97%98%EB%A6%AC%EC%8B%9C%EC%9B%80&page={i}"
+        for retry in range(3):
+            try:
+                req = requests.get(url,headers=headers)
+                if req.status_code == 200:
+                    data = req.json()
+                    mydata.append(data)
+                    break
+                elif req.status_code == 429:
+                    print(f"Rate limit! {i}번째 페이지 재시도 중")
+                    time.sleep(10 * (retry + 1))
+                else:
+                    print(f"{i}번째 요청 실패 - 상태 코드 :{req.status_code}")
+                    break
+            except Exception as e:
+                print(f"{i}번째 요청중 오류 발생 :{e}")
+                time.sleep(5)
+        time.sleep(1.2)
+
     
     print("ranking_data 호출이 끝났습니다.")
     
