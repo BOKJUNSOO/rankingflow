@@ -20,8 +20,8 @@ def main():
     batch_yesterday_date=batch_yesterday_date.strftime("%Y-%m-%d")
 
     # hardcoding for test
-    batch_date = "2025-04-09"
-    batch_yesterday_date = "2025-04-08"
+    # batch_date = "2025-04-09"
+    # batch_yesterday_date = "2025-04-08"
 
     batch_data_path= f"/opt/bitnami/spark/data/ranking_{batch_date}.json" # batch일 데이터 경로
     batch_y_data_path= f"/opt/bitnami/spark/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
