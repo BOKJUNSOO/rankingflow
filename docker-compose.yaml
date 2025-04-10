@@ -305,7 +305,7 @@ services:
       xpack.security.transport.ssl.enabled: 'false'
       cluster.routing.allocation.disk.threshold_enabled: 'false'
       ELASTIC_PASSWORD: 'password'
-      http.cors.allow-origin: '*'
+      http.cors.allow-origin: "*"
       http.cors.enabled: true
       http.cors.allow-credentials: true
       http.cors.allow-methods: OPTIONS, POST
