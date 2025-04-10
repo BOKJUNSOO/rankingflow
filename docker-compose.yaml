@@ -180,19 +180,19 @@ services:
   #  depends_on:
   #    - spark-master
 
-  #jupyterlab:
-  #  image: jupyter/pyspark-notebook:latest
-  #  ports:
-  #    - "8888:8888"
-  #  volumes:
-  #    - ./notebooks:/home/jovyan/work
-  #    - ./data:/home/jovyan/data
-  #  environment:
-  #    - JUPYTER_ENABLE_LAB=yes
-  #    - GRANT_SUDO=yes
-  #    - JUPYTER_TOKEN=password
-  #  depends_on:
-  #    - spark-master
+  jupyterlab:
+    image: jupyter/pyspark-notebook:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/data
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+      - JUPYTER_TOKEN=password
+    depends_on:
+      - spark-master
 
   #setup:
   #   image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
