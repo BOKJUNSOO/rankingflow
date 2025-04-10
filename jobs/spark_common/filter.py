@@ -60,7 +60,8 @@ class TableBuilder(Basefilter):
                                     F.col("status_today").alias("status"),
                                         "exp_gained_today",
                                         "exp_remained_for_up",
-                                        "level_up_days_remaining")
+                                        "level_up_days_remaining",
+                                        "my_rank")
         return user_exp_agg
         
     # agg_user_exp의 리턴된 테이블로부터 class_exp_aggregate 테이블을 만드는 함수
