@@ -292,27 +292,27 @@ services:
        interval: 10s
        timeout: 10s
        retries: 120
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-    environment:
-      - node.name=es
-      - discovery.type=single-node
-      - discovery.seed_hosts=es
-      - xpack.security.enabled=false
-      - xpack.security.enrollment.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - cluster.routing.allocation.disk.threshold_enabled=false
-      - ELASTIC_PASSWORD=password
-    mem_limit: 1073741824
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - ./es-data:/usr/share/es/data
-    ports:
-      - 9200:9200
+  #es:
+  #  image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+  #  environment:
+  #    - node.name=es
+  #    - discovery.type=single-node
+  #    - discovery.seed_hosts=es
+  #    - xpack.security.enabled=false
+  #    - xpack.security.enrollment.enabled=false
+  #    - xpack.security.http.ssl.enabled=false
+  #    - xpack.security.transport.ssl.enabled=false
+  #    - cluster.routing.allocation.disk.threshold_enabled=false
+  #    - ELASTIC_PASSWORD=password
+  #  mem_limit: 1073741824
+  #  ulimits:
+  #    memlock:
+  #      soft: -1
+  #      hard: -1
+  #  volumes:
+  #    - ./es-data:/usr/share/es/data
+  #  ports:
+  #    - 9200:9200
 
   postgres:
     image: postgres:13
