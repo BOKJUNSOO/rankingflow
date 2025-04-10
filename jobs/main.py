@@ -19,9 +19,6 @@ def main():
     batch_date= batch_date.strftime("%Y-%m-%d")
     batch_yesterday_date=batch_yesterday_date.strftime("%Y-%m-%d")
 
-    # hardcoding for test
-    batch_date = "2025-04-09"
-    batch_yesterday_date = "2025-04-08"
 
     batch_data_path= f"/opt/bitnami/spark/data/ranking_{batch_date}.json" # batch일 데이터 경로
     batch_y_data_path= f"/opt/bitnami/spark/data/ranking_{batch_yesterday_date}.json" # batch전날 데이터 경로
@@ -63,7 +60,7 @@ def main():
     class_exp_df.show(10)
 
     # save_data to elasticSearch
-    save_to_elastic_search=spark_common.ElasticSearch("http://es01:9200")
+    save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
     save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
     save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
     save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")

@@ -47,6 +47,11 @@ class TableBuilder(Basefilter):
         # 레벨업까지 필요한 예상 일자를 계산
         joined_df = joined_df.withColumn("level_up_days_remaining", F.when(joined_df["exp_gained_today"] != 0,F.round(joined_df["exp_remained_for_up"]/joined_df["exp_gained_today"]).cast("int"))
                                  .otherwise("we need you T.T"))
+        
+        # 지역별 경험치 획득량 계산
+        rule_ = Window.partitionBy("status_today").orderBy(F.desc("exp_gained_today"))
+        joined_df = joined_df.withColumn("my_rank",F.rank().over(rule_))
+
         # 필요한 컬럼만 선택
         user_exp_agg = joined_df.select("character_name",
                                         "date",
@@ -55,7 +60,8 @@ class TableBuilder(Basefilter):
                                     F.col("status_today").alias("status"),
                                         "exp_gained_today",
                                         "exp_remained_for_up",
-                                        "level_up_days_remaining")
+                                        "level_up_days_remaining",
+                                        "my_rank")
         return user_exp_agg
         
     # agg_user_exp의 리턴된 테이블로부터 class_exp_aggregate 테이블을 만드는 함수
