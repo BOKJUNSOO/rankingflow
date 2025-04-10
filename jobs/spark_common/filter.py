@@ -49,7 +49,7 @@ class TableBuilder(Basefilter):
                                  .otherwise("we need you T.T"))
         
         # 지역별 경험치 획득량 계산
-        rule_ = Window.partitionBy("status").orderBy(F.desc("exp_gained_today"))
+        rule_ = Window.partitionBy("status_today").orderBy(F.desc("exp_gained_today"))
         joined_df = joined_df.withColumn("my_rank",F.rank().over(rule_))
 
         # 필요한 컬럼만 선택
