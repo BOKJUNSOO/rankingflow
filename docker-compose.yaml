@@ -306,7 +306,7 @@ services:
       - ELASTIC_PASSWORD=password
     volumes:
       - ./es-data:/usr/share/es/data
-      #- ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
 
