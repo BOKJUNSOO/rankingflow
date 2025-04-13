@@ -138,7 +138,7 @@ services:
       - cluster.routing.allocation.disk.threshold_enabled=false
       - ELASTIC_PASSWORD=password
     volumes:
-      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es-data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
 
