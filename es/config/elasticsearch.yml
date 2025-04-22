@@ -1,6 +1,8 @@
+# default env
 cluster.name: "docker-cluster"
 network.host: 0.0.0.0
-http.cors.allow-origin: "*" # Only use unrestricted value for local development
+# Only use unrestricted value for local development
+http.cors.allow-origin: "*"
 # Use a specific origin value in production, like `http.cors.allow-origin: "https://<my-website-domain.example>"`
 http.cors.enabled: true
 http.cors.allow-credentials: true
