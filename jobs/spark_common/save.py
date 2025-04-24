@@ -26,7 +26,7 @@ class MySQL:
     
     def write(self,df:object,db_table_name:str):
         df.write \
-          .mode("append")\
+          .mode("overwrite")\
           .format("jdbc")\
           .option("driver","com.mysql.cj.jdbc.Driver")\
           .option("url",self.url)\
