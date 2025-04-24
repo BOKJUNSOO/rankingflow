@@ -60,10 +60,8 @@ x-airflow-common:
     dockerfile: Dockerfile
   environment:
     &airflow-common-env
-    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
@@ -293,22 +291,22 @@ services:
   #     timeout: 10s
   #     retries: 120
 
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-    environment:
-      - node.name=es
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - xpack.security.enrollment.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - cluster.routing.allocation.disk.threshold_enabled=false
-      - ELASTIC_PASSWORD=password
-    volumes:
-      - ./es-data:/usr/share/elasticsearch/data
-      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-    ports:
-      - 9200:9200
+  # es:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+  #   environment:
+  #     - node.name=es
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - xpack.security.enrollment.enabled=false
+  #     - xpack.security.http.ssl.enabled=false
+  #     - xpack.security.transport.ssl.enabled=false
+  #     - cluster.routing.allocation.disk.threshold_enabled=false
+  #     - ELASTIC_PASSWORD=password
+  #   volumes:
+  #     - ./es-data:/usr/share/elasticsearch/data
+  #     - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  #   ports:
+  #     - 9200:9200
 
   postgres:
     image: postgres:13
@@ -325,19 +323,19 @@ services:
       start_period: 5s
     restart: always
   
-  redis:
-    # Redis is limited to 7.2-bookworm due to licencing change
-    # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
-    image: redis:7.2-bookworm
-    expose:
-      - 6379
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 30s
-      retries: 50
-      start_period: 30s
-    restart: always
+  # redis:
+  #   # Redis is limited to 7.2-bookworm due to licencing change
+  #   # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
+  #   image: redis:7.2-bookworm
+  #   expose:
+  #     - 6379
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 50
+  #     start_period: 30s
+  #   restart: always
 
   airflow-webserver:
     <<: *airflow-common
