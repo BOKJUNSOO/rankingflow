@@ -146,8 +146,6 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.4.3
-    networks:
-      - default-network
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=http://es:9200
