@@ -61,11 +61,11 @@ def main():
 
     # save_data to elasticSearch
     print("write spark data frame at ES database..")
-    #save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
-    #save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
-    #save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
-    #save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
-    #save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
+    save_to_elastic_search=spark_common.ElasticSearch("http://es:9200")
+    save_to_elastic_search.write(class_status_df,f"class_status_{batch_date}")
+    save_to_elastic_search.write(achievement_summary_df,f"achievement_summary_{batch_date}")
+    save_to_elastic_search.write(user_exp_agg_df,f"user_exp_{batch_date}")
+    save_to_elastic_search.write(class_exp_df,f"class_exp_{batch_date}")
     print("Done!")
     #
     ## save_data to MySQL

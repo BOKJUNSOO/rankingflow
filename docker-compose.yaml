@@ -122,189 +122,136 @@ services:
       - "9080:8080"
       - "4444:4040"
 
-  # spark-worker-1:
-  #   <<: *spark-common
-  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-  #   environment:
-  #     - SPARK_MODE=worker
-  #     - SPARK_MASTER_URL=spark://spark-master:7077
-  #     - SPARK_WORKER_WEBUI_PORT=8081
-  #     - SPARK_WORKER_MEMORY=2G
-  #     - SPARK_WORKER_CORES=2
-  #   depends_on:
-  #     - spark-master
-  #   ports:
-  #     - "9081:8081"
+  setup:
+     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+     volumes:
+       - certs:/usr/share/elasticsearch/config/certs
+     user: "0"
+     command: >
+       bash -c '
+         if [ x${ELASTIC_PASSWORD} == x ]; then
+           echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+           exit 1;
+         elif [ x${KIBANA_PASSWORD} == x ]; then
+           echo "Set the KIBANA_PASSWORD environment variable in the .env file";
+           exit 1;
+         fi;
+         if [ ! -f config/certs/ca.zip ]; then
+           echo "Creating CA";
+           bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+           unzip config/certs/ca.zip -d config/certs;
+         fi;
+         if [ ! -f config/certs/certs.zip ]; then
+           echo "Creating certs";
+           echo -ne \
+           "instances:\n"\
+           "  - name: es01\n"\
+           "    dns:\n"\
+           "      - es01\n"\
+           "      - localhost\n"\
+           "    ip:\n"\
+           "      - 127.0.0.1\n"\
+           "  - name: kibana\n"\
+           "    dns:\n"\
+           "      - kibana\n"\
+           "      - localhost\n"\
+           "    ip:\n"\
+           "      - 127.0.0.1\n"\
+           > config/certs/instances.yml;
+           bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+           unzip config/certs/certs.zip -d config/certs;
+         fi;
+         echo "Setting file permissions"
+         chown -R root:root config/certs;
+         find . -type d -exec chmod 750 \{\} \;;
+         find . -type f -exec chmod 640 \{\} \;;
+         echo "Waiting for Elasticsearch availability";
+         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+         echo "Setting kibana_system password";
+         until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+         echo "All done!";
+       '
+     healthcheck:
+       test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+       interval: 1s
+       timeout: 5s
+       retries: 120
+     
+  es01:
+     depends_on:
+       setup:
+         condition: service_healthy
+     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+     labels:
+       co.elastic.logs/module: elasticsearch
+     volumes:
+       - certs:/usr/share/elasticsearch/config/certs
+       - esdata01:/usr/share/elasticsearch/data
+     ports:
+       - ${ES_PORT}:9200
+     environment:
+       - node.name=es01
+       - cluster.name=${CLUSTER_NAME}
+       - discovery.type=single-node
+       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+       - bootstrap.memory_lock=true
+       - xpack.security.enabled=true
+       - xpack.security.http.ssl.enabled=true
+       - xpack.security.http.ssl.key=certs/es01/es01.key
+       - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+       - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+       - xpack.security.transport.ssl.enabled=true
+       - xpack.security.transport.ssl.key=certs/es01/es01.key
+       - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+       - xpack.security.transport.ssl.verification_mode=certificate
+       - xpack.license.self_generated.type=${LICENSE}
+     mem_limit: ${ES_MEM_LIMIT}
+     ulimits:
+       memlock:
+         soft: -1
+         hard: -1
+     healthcheck:
+       test:
+         [
+           "CMD-SHELL",
+           "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+         ]
+       interval: 10s
+       timeout: 10s
+       retries: 120
 
-  # spark-worker-2:
-  #   <<: *spark-common
-  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-  #   environment:
-  #     - SPARK_MODE=worker
-  #     - SPARK_MASTER_URL=spark://spark-master:7077
-  #     - SPARK_WORKER_WEBUI_PORT=8081
-  #     - SPARK_WORKER_MEMORY=2G
-  #     - SPARK_WORKER_CORES=2
-  #   depends_on:
-  #     - spark-master
-  #   ports:
-  #     - "9082:8081"
-
-  # spark-worker-3:
-  #   <<: *spark-common
-  #   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-  #   environment:
-  #     - SPARK_MODE=worker
-  #     - SPARK_MASTER_URL=spark://spark-master:7077
-  #     - SPARK_WORKER_WEBUI_PORT=8081
-  #     - SPARK_WORKER_MEMORY=2G
-  #     - SPARK_WORKER_CORES=2
-  #   depends_on:
-  #     - spark-master
-  #   ports:
-  #     - "9083:8081"
-
-  #spark-history:
-  #  <<: *spark-common
-  #  command: bin/spark-class org.apache.spark.deploy.history.HistoryServer
-  #  volumes:
-  #    - ./spark-events:/tmp/spark-events
-  #  environment:
-  #    - SPARK_HISTORY_FS_LOGDIRECTORY=file:/tmp/spark-events
-  #  ports:
-  #    - "18080:18080"
-  #  depends_on:
-  #    - spark-master
-
-  #jupyterlab:
-  #  image: jupyter/pyspark-notebook:latest
-  #  ports:
-  #    - "8888:8888"
-  #  volumes:
-  #    - ./notebooks:/home/jovyan/work
-  #    - ./data:/home/jovyan/data
-  #  environment:
-  #    - JUPYTER_ENABLE_LAB=yes
-  #    - GRANT_SUDO=yes
-  #    - JUPYTER_TOKEN=password
-  #  depends_on:
-  #    - spark-master
-
-  #setup:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-  #   volumes:
-  #     - certs:/usr/share/elasticsearch/config/certs
-  #   user: "0"
-  #   command: >
-  #     bash -c '
-  #       if [ x${ELASTIC_PASSWORD} == x ]; then
-  #         echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
-  #         exit 1;
-  #       elif [ x${KIBANA_PASSWORD} == x ]; then
-  #         echo "Set the KIBANA_PASSWORD environment variable in the .env file";
-  #         exit 1;
-  #       fi;
-  #       if [ ! -f config/certs/ca.zip ]; then
-  #         echo "Creating CA";
-  #         bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
-  #         unzip config/certs/ca.zip -d config/certs;
-  #       fi;
-  #       if [ ! -f config/certs/certs.zip ]; then
-  #         echo "Creating certs";
-  #         echo -ne \
-  #         "instances:\n"\
-  #         "  - name: es01\n"\
-  #         "    dns:\n"\
-  #         "      - es01\n"\
-  #         "      - localhost\n"\
-  #         "    ip:\n"\
-  #         "      - 127.0.0.1\n"\
-  #         "  - name: kibana\n"\
-  #         "    dns:\n"\
-  #         "      - kibana\n"\
-  #         "      - localhost\n"\
-  #         "    ip:\n"\
-  #         "      - 127.0.0.1\n"\
-  #         > config/certs/instances.yml;
-  #         bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
-  #         unzip config/certs/certs.zip -d config/certs;
-  #       fi;
-  #       echo "Setting file permissions"
-  #       chown -R root:root config/certs;
-  #       find . -type d -exec chmod 750 \{\} \;;
-  #       find . -type f -exec chmod 640 \{\} \;;
-  #       echo "Waiting for Elasticsearch availability";
-  #       until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
-  #       echo "Setting kibana_system password";
-  #       until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
-  #       echo "All done!";
-  #     '
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
-  #     interval: 1s
-  #     timeout: 5s
-  #     retries: 120
-  #   
-  #es01:
-  #   depends_on:
-  #     setup:
-  #       condition: service_healthy
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-  #   labels:
-  #     co.elastic.logs/module: elasticsearch
-  #   volumes:
-  #     - certs:/usr/share/elasticsearch/config/certs
-  #     - esdata01:/usr/share/elasticsearch/data
-  #   ports:
-  #     - ${ES_PORT}:9200
-  #   environment:
-  #     - node.name=es01
-  #     - cluster.name=${CLUSTER_NAME}
-  #     - discovery.type=single-node
-  #     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-  #     - bootstrap.memory_lock=true
-  #     - xpack.security.enabled=true
-  #     - xpack.security.http.ssl.enabled=true
-  #     - xpack.security.http.ssl.key=certs/es01/es01.key
-  #     - xpack.security.http.ssl.certificate=certs/es01/es01.crt
-  #     - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-  #     - xpack.security.transport.ssl.enabled=true
-  #     - xpack.security.transport.ssl.key=certs/es01/es01.key
-  #     - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
-  #     - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-  #     - xpack.security.transport.ssl.verification_mode=certificate
-  #     - xpack.license.self_generated.type=${LICENSE}
-  #   mem_limit: ${ES_MEM_LIMIT}
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #   healthcheck:
-  #     test:
-  #       [
-  #         "CMD-SHELL",
-  #         "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-  #       ]
-  #     interval: 10s
-  #     timeout: 10s
-  #     retries: 120
-
-  # es:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
-  #   environment:
-  #     - node.name=es
-  #     - discovery.type=single-node
-  #     - xpack.security.enabled=false
-  #     - xpack.security.enrollment.enabled=false
-  #     - xpack.security.http.ssl.enabled=false
-  #     - xpack.security.transport.ssl.enabled=false
-  #     - cluster.routing.allocation.disk.threshold_enabled=false
-  #     - ELASTIC_PASSWORD=password
-  #   volumes:
-  #     - ./es-data:/usr/share/elasticsearch/data
-  #     - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-  #   ports:
-  #     - 9200:9200
+  kibana:
+     depends_on:
+       es01:
+         condition: service_healthy
+     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+     labels:
+       co.elastic.logs/module: kibana
+     volumes:
+       - certs:/usr/share/kibana/config/certs
+       - kibanadata:/usr/share/kibana/data
+     ports:
+       - ${KIBANA_PORT}:5601
+     environment:
+       - SERVERNAME=kibana
+       - ELASTICSEARCH_HOSTS=https://es01:9200
+       - ELASTICSEARCH_USERNAME=kibana_system
+       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+     mem_limit: ${KB_MEM_LIMIT}
+     healthcheck:
+       test:
+         [
+           "CMD-SHELL",
+           "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+         ]
+       interval: 10s
+       timeout: 10s
+       retries: 120
 
   postgres:
     image: postgres:13
@@ -320,20 +267,6 @@ services:
       retries: 5
       start_period: 5s
     restart: always
-  
-  # redis:
-  #   # Redis is limited to 7.2-bookworm due to licencing change
-  #   # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
-  #   image: redis:7.2-bookworm
-  #   expose:
-  #     - 6379
-  #   healthcheck:
-  #     test: ["CMD", "redis-cli", "ping"]
-  #     interval: 10s
-  #     timeout: 30s
-  #     retries: 50
-  #     start_period: 30s
-  #   restart: always
 
   airflow-webserver:
     <<: *airflow-common
@@ -366,30 +299,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
-
-  # airflow-worker:
-  #   <<: *airflow-common
-  #   command: celery worker
-  #   healthcheck:
-  #     # yamllint disable rule:line-length
-  #     test:
-  #       - "CMD-SHELL"
-  #       - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 5
-  #     start_period: 30s
-  #   environment:
-  #     <<: *airflow-common-env
-  #     # Required to handle warm shutdown of the celery workers properly
-  #     # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
-  #     DUMB_INIT_SETSID: "0"
-  #   restart: always
-  #   depends_on:
-  #     <<: *airflow-common-depends-on
-  #     airflow-init:
-  #       condition: service_completed_successfully
 
 
   airflow-triggerer:
