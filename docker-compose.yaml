@@ -229,8 +229,8 @@ services:
      labels:
        co.elastic.logs/module: kibana
      volumes:
-       - certs:/usr/share/kibana/config/certs
-       - kibanadata:/usr/share/kibana/data
+       - ./certs:/usr/share/kibana/config/certs
+       - ./kibanadata:/usr/share/kibana/data
      ports:
        - ${KIBANA_PORT}:5601
      environment:
